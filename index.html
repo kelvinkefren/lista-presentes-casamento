@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lista de Presentes — Casamento</title>
+  <meta name="description" content="Lista de presentes do casamento — confirme presença, veja itens e envie um presente com amor." />
+  <meta property="og:title" content="Lista de Presentes — Casamento" />
+  <meta property="og:description" content="Confirme presença, veja itens e envie um presente com amor." />
+  <meta property="og:type" content="website" />
+  <style>
+    :root{
+      --bg:#0f172a;         /* slate-900 */
+      --panel:#111827;      /* gray-900 */
+      --muted:#94a3b8;      /* slate-400 */
+      --text:#e5e7eb;       /* gray-200 */
+      --brand:#22c55e;      /* green-500 */
+      --brand-2:#38bdf8;    /* sky-400 */
+      --danger:#ef4444;     /* red-500 */
+      --warn:#f59e0b;       /* amber-500 */
+      --ok:#10b981;         /* emerald-500 */
+      --card:#0b1225;       /* darker */
+      --chip:#1f2937;       /* gray-800 */
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius: 18px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;background:linear-gradient(180deg,#0b1020,#0f172a);color:var(--text);font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,"Noto Sans",sans-serif}
+    a{color:inherit}
+    .wrap{max-width:1100px;margin:0 auto;padding:24px}
+    header.hero{position:relative;border-radius:28px;padding:28px;overflow:hidden;background:
+      radial-gradient(1200px 600px at -5% -10%, rgba(56,189,248,.18), transparent 40%),
+      radial-gradient(1200px 600px at 110% 110%, rgba(34,197,94,.18), transparent 40%),
+      linear-gradient(180deg, #0d152c, #0b1225 60%)
+    ;box-shadow:var(--shadow)}
+    .hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:22px}
+    @media(max-width:900px){.hero-grid{grid-template-columns:1fr}}
+    .hero h1{font-size:clamp(28px,4vw,42px);margin:0 0 8px 0}
+    .date{display:flex;gap:10px;align-items:center;color:var(--muted)}
+    .chip{display:inline-flex;gap:8px;align-items:center;background:var(--chip);border:1px solid #1f2b46;color:#cbd5e1;border-radius:999px;padding:6px 12px;font-size:13px}
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:18px}
+    .card{grid-column:span 12;background:var(--card);border:1px solid #162036;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+    .card .body{padding:18px}
+    .flex{display:flex;gap:10px;align-items:center}
+    .btn{appearance:none;border:0;background:var(--brand);color:#052e1b;font-weight:700;border-radius:12px;padding:12px 14px;cursor:pointer;transition:.2s;box-shadow:0 6px 16px rgba(34,197,94,.2)}
+    .btn:hover{transform:translateY(-1px);filter:brightness(1.02)}
+    .btn.alt{background:#0e1b34;color:#cbd5e1;border:1px solid #203055;box-shadow:none}
+    .btn.ghost{background:transparent;border:1px solid #213055;color:#cbd5e1}
+    .btn.bad{background:var(--danger);color:#2a0707;box-shadow:0 6px 16px rgba(239,68,68,.2)}
+    .btn.warn{background:var(--warn);color:#2f1e03}
+    .btn.ok{background:var(--ok);color:#032019}
+    .title{font-size:18px;font-weight:800;margin:0 0 6px 0}
+    .muted{color:var(--muted)}
+    .section{margin:26px 0}
+    .toolbar{display:flex;flex-wrap:wrap;gap:10px}
+    .toolbar input,.toolbar select{background:#0d172e;border:1px solid #1f2b46;color:#cbd5e1;border-radius:12px;padding:10px 12px;outline:none}
+    .toolbar input::placeholder{color:#64748b}
+    .products{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    @media(max-width:1000px){.products{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:640px){.products{grid-template-columns:1fr}}
+    .product{background:linear-gradient(180deg,#0c1428,#0b1225);border:1px solid #17203a;border-radius:16px;overflow:hidden;display:flex;flex-direction:column;position:relative}
+    .product .img{aspect-ratio:4/3;background:#0a1224 center/cover no-repeat}
+    .product .content{padding:14px;display:flex;flex-direction:column;gap:8px}
+    .product .price{font-weight:900}
+    .product .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}
+    .badge{position:absolute;top:10px;left:10px;background:#0b1225;border:1px solid #1d2a48;color:#cbd5e1;border-radius:999px;padding:6px 10px;font-size:12px}
+    .status{position:absolute;inset:0;background:rgba(8,10,16,.72);display:none;align-items:center;justify-content:center;font-weight:900;letter-spacing:.5px}
+    .product.reservado .status{display:flex}
+    .product.comprado .status{display:flex;background:rgba(8,10,16,.82)}
+    .product.reservado .status span{background:var(--warn);color:#2e1602}
+    .product.comprado .status span{background:var(--ok);color:#052014}
+    .status span{padding:8px 12px;border-radius:10px}
+    .tiny{font-size:12px;color:#8da3c1}
+    .hr{border-top:1px solid #192644;margin:12px 0}
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    @media(max-width:840px){.two-col{grid-template-columns:1fr}}
+    footer{opacity:.8;margin:28px 0 80px 0}
+    .copy{background:#0d1a32;border:1px dashed #2a3b64;border-radius:12px;padding:12px}
+    .tag{background:#0e1b34;border:1px solid #213055;padding:4px 8px;border-radius:999px;font-size:12px;color:#cbd5e1}
+    .pill{display:inline-flex;gap:8px;align-items:center}
+    .hidden{display:none}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="hero">
+      <div class="hero-grid">
+        <div>
+          <h1 id="coupleTitle">Nosso Casamento</h1>
+          <div class="date">
+            <span class="chip" title="Data do casamento"><strong id="dateHuman">27 ago 2025 • 12:00</strong></span>
+            <span class="chip" id="venueChip">Local: <span id="venueName">Cartório Vitória</span></span>
+          </div>
+          <p class="muted" style="margin:12px 0 18px 0">Faltam <strong id="countdown">—</strong> para o grande dia! 🎉
+            <br/>Veja a lista de presentes, e nos ajude nessa aventura.</p>
+          <div class="toolbar">
+            <button class="btn" id="addToCalendar">Adicionar ao calendário</button>
+            <a class="btn alt" id="mapsLink" href="#" target="_blank" rel="noopener">Como chegar</a>
+            <button class="btn ghost" id="shareSite">Compartilhar site</button>
+          </div>
+        </div>
+        <div class="card" style="min-height:100%">
+          <div class="body">
+            <div class="title">Contribuir via Pix</div>
+            <p class="muted">Se preferir, você pode presentear com qualquer valor via Pix. 💚</p>
+            <div class="copy">
+              <div class="tiny">Chave Pix</div>
+              <div id="pixKeyText" style="word-break:break-all;margin:6px 0 8px 0;font-weight:800">configurar-em-config.js</div>
+              <div class="toolbar"><button class="btn ok" id="copyPix">Copiar chave</button><a class="btn alt" id="openPixWhats" href="#" target="_blank" rel="noopener">Enviar comprovante (WhatsApp)</a></div>
+            </div>
+            <div id="pixQrWrap" class="section hidden">
+              <div class="tiny">QR Code Pix</div>
+              <img id="pixQrImg" alt="QR Code Pix" style="width:100%;max-width:320px;border-radius:12px;border:1px solid #1d2a48" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="section">
+      <div class="title">Lista de Presentes</div>
+      <p class="muted" style="margin-top:6px">Escolha um item abaixo. Clique em <em>Reservar</em> para nos avisar pelo WhatsApp e depois <em>Comprar</em> pelo link da loja. Atualizamos o status manualmente.
+      </p>
+      <div class="toolbar" style="margin:12px 0 16px 0">
+        <input id="q" type="search" placeholder="Buscar por nome, categoria..." />
+        <select id="cat"></select>
+        <select id="sort">
+          <option value="prioridade">Ordenar: prioridade</option>
+          <option value="preco-asc">Preço: menor → maior</option>
+          <option value="preco-desc">Preço: maior → menor</option>
+          <option value="titulo">A-Z</option>
+        </select>
+        <label class="pill"><input id="onlyAvail" type="checkbox" /> <span class="tag">Apenas disponíveis</span></label>
+        <button class="btn ghost" id="refresh">Atualizar lista</button>
+      </div>
+      <div id="products" class="products"></div>
+      <div id="emptyState" class="muted hidden" style="margin-top:8px">Nenhum item encontrado.</div>
+    </section>
+
+    <section class="section two-col">
+      <div class="card"><div class="body">
+        <div class="title">Detalhes do Evento</div>
+        <div class="hr"></div>
+        <div class="muted"><strong id="dateFull"></strong></div>
+        <div class="muted">Local: <strong id="venueFull">—</strong></div>
+        <div class="muted">Endereço: <strong id="address"></strong></div>
+        <div class="toolbar" style="margin-top:10px">
+          <a class="btn alt" id="venueMap2" href="#" target="_blank" rel="noopener">Abrir mapa</a>
+        </div>
+      </div></div>
+      <div class="card"><div class="body">
+        <div class="title">Confirmação de Presença (RSVP)</div>
+        <p class="muted">Use o botão abaixo para confirmar presença. Se preferir, fale com a gente por WhatsApp. 💬</p>
+        <div class="toolbar">
+          <a class="btn" id="rsvpBtn" href="#" target="_blank" rel="noopener">Abrir formulário de RSVP</a>
+          <a class="btn alt" id="whatsContact" href="#" target="_blank" rel="noopener">Falar no WhatsApp</a>
+        </div>
+      </div></div>
+    </section>
+
+    <footer class="muted">
+      Feito com carinho 💚 — personalize este arquivo (<span class="tiny">index.html</span>) e publique no GitHub Pages.
+    </footer>
+  </div>
+
+  <script>
+  // =====================
+  // CONFIGURAÇÕES GERAIS
+  // =====================
+  const CONFIG = {
+    coupleNames: "Kelvin & Tamaiale",
+    // Formato ISO com timezone de Salvador (UTC-03)
+    weddingDateISO: "2025-08-27T12:00:00-04:00",
+    venueName: "Cartório Vitória",
+    venueAddress: " R. Professor Martagão Gesteira, 477 - Graça, Salvador",
+    mapsLink: "https://www.google.com/maps/place/Cart%C3%B3rio+de+Registro+Civil+das+Pessoas+Naturais+do+Subdistrito+da+Vit%C3%B3ria/@-13.002347,-38.5250939,1083m/data=!3m2!1e3!4b1!4m6!3m5!1s0x716037e88b3d331:0x4b8d9a28c97501de!8m2!3d-13.002347!4d-38.522519!16s%2Fg%2F1q62lf0wk?entry=ttu&g_ep=EgoyMDI1MDgxOS4wIKXMDSoASAFQAw%3D%3D",
+    whatsappNumber: "71988183846", // ex: 5599999999999 (DDD+Número)
+    rsvpFormUrl: "https://forms.gle/", // opcional: Google Forms
+    pixKey: "71988183846", // e-mail, CPF, telefone, aleatória
+    pixQrImageUrl: "bradesco.png", // opcional: caminho para imagem do QR
+    // Fonte de dados: use apenas UMA. Recomendo a planilha do Google publicada.
+    sheetUrl: "https://docs.google.com/spreadsheets/d/11-eUVwz6axvkVt1io78a15XF859dx0SYHS31TUZJ4cU/gviz/tq?tqx=out:json", // ex: https://docs.google.com/spreadsheets/d/ID/gviz/tq?tqx=out:json OU .../export?format=csv
+    autoRefreshMinutes: 5,
+    moeda: "BRL"
+  };
+
+  // Itens estáticos de exemplo (use caso não queira planilha agora)
+  const STATIC_ITEMS = [
+    { id:"1", status:"disponivel", categoria:"Cozinha", titulo:"Jogo de Panelas Antiaderentes (5 peças)", descricao:"Conjunto durável para o dia a dia.", preco:299.90, link:"https://www.magazineluiza.com.br/", imagem:"https://images.unsplash.com/photo-1543339308-43f5b16b17d6?q=80&w=1280&auto=format&fit=crop", prioridade:1 },
+    { id:"2", status:"disponivel", categoria:"Quarto", titulo:"Jogo de Cama Queen 150 fios", descricao:"Tecido macio e resistente.", preco:169.00, link:"https://www.americanas.com.br/", imagem:"https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?q=80&w=1280&auto=format&fit=crop", prioridade:2 },
+    { id:"3", status:"reservado", categoria:"Eletro", titulo:"Liquidificador 900W Inox", descricao:"Potente e silencioso.", preco:239.90, link:"https://www.amazon.com.br/", imagem:"https://images.unsplash.com/photo-1611259182765-9c012d78f05f?q=80&w=1280&auto=format&fit=crop", prioridade:3 },
+    { id:"4", status:"disponivel", categoria:"Sala", titulo:"Conjunto de Taças para Vinho (6x)", descricao:"Vidro temperado, 450 ml.", preco:129.90, link:"https://www.mercadolivre.com.br/", imagem:"https://images.unsplash.com/photo-1495860436317-9a4d2078d3f9?q=80&w=1280&auto=format&fit=crop", prioridade:4 },
+    { id:"5", status:"comprado", categoria:"Banho", titulo:"Jogo de Toalhas (4 peças)", descricao:"Algodão 450 g/m².", preco:139.00, link:"https://www.submarino.com.br/", imagem:"https://images.unsplash.com/photo-1521043723867-9b3d1dc4a3e9?q=80&w=1280&auto=format&fit=crop", prioridade:5 }
+  ];
+
+  // ================
+  // UTILITÁRIOS
+  // ================
+  const fmtBRL = v => new Intl.NumberFormat('pt-BR',{style:'currency',currency:CONFIG.moeda}).format(v||0);
+  const qs = s => document.querySelector(s);
+  const el = (tag, attrs={}) => Object.assign(document.createElement(tag), attrs);
+
+  function humanDateLong(iso){
+    const d = new Date(iso);
+    return d.toLocaleString('pt-BR',{
+      weekday:'long', day:'2-digit', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit'
+    });
+  }
+  function humanDateShort(iso){
+    const d = new Date(iso);
+    return d.toLocaleDateString('pt-BR',{ day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit' });
+  }
+
+  // Cria arquivo .ics (calendário)
+  function downloadICS(){
+    const d = new Date(CONFIG.weddingDateISO);
+    const pad = n=> String(n).padStart(2,'0');
+    const dt = `${d.getUTCFullYear()}${pad(d.getUTCMonth()+1)}${pad(d.getUTCDate())}T${pad(d.getUTCHours())}${pad(d.getUTCMinutes())}00Z`;
+    const title = `Casamento — ${CONFIG.coupleNames}`;
+    const loc = `${CONFIG.venueName} — ${CONFIG.venueAddress}`;
+    const ics = `BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//ListaPresentes//BR//PT\nBEGIN:VEVENT\nUID:${Date.now()}@listapresentes\nDTSTAMP:${dt}\nDTSTART:${dt}\nDTEND:${dt}\nSUMMARY:${title}\nLOCATION:${loc}\nDESCRIPTION:Venha celebrar conosco!\nEND:VEVENT\nEND:VCALENDAR`;
+    const blob = new Blob([ics], {type:'text/calendar'});
+    const url = URL.createObjectURL(blob);
+    const a = el('a',{href:url,download:'casamento.ics'}); document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  }
+
+  // Compartilhar site (mobile)
+  async function shareSite(){
+    try{
+      if(navigator.share){
+        await navigator.share({title:document.title, text:`Lista de presentes — ${CONFIG.coupleNames}`, url:location.href});
+      } else { alert('Copie o link: '+location.href); }
+    }catch(e){ console.log(e) }
+  }
+
+  // Contagem regressiva
+  function startCountdown(){
+    const elC = qs('#countdown');
+    const target = new Date(CONFIG.weddingDateISO).getTime();
+    function tick(){
+      const now = Date.now();
+      const diff = Math.max(0, target - now);
+      const d = Math.floor(diff/86400000);
+      const h = Math.floor((diff%86400000)/3600000);
+      const m = Math.floor((diff%3600000)/60000);
+      elC.textContent = `${d} dias, ${h}h ${m}m`;
+    }
+    tick(); setInterval(tick, 30000);
+  }
+
+  // WhatsApp helpers
+  function waLink(text){
+    const base = `https://wa.me/${CONFIG.whatsappNumber}`;
+    return `${base}?text=${encodeURIComponent(text)}`;
+  }
+
+  // =========================
+  // CARREGAR DADOS (Planilha)
+  // =========================
+  async function fetchSheet(){
+    if(!CONFIG.sheetUrl){ return null; }
+    const url = CONFIG.sheetUrl.trim();
+    const text = await fetch(url).then(r=>r.text());
+
+    // gviz JSON
+    if(url.includes('tqx=out:json')){
+      const jsonText = text.substring(text.indexOf('{'), text.lastIndexOf('}')+1);
+      const data = JSON.parse(jsonText);
+      const cols = data.table.cols.map(c=> (c.label||c.id||'').toLowerCase());
+      return data.table.rows.map((r,i)=>{
+        const o={};
+        r.c.forEach((cell,idx)=>{ o[cols[idx]||`col${idx}`] = cell? cell.v: '' });
+        return normalizeItem(o,i);
+      });
+    }
+
+    // CSV
+    if(url.includes('export?format=csv') || url.endsWith('.csv')){
+      const rows = text.split(/\r?\n/).filter(Boolean).map(l=> splitCSV(l));
+      const headers = rows.shift().map(h=> (h||'').toLowerCase());
+      return rows.map((cells,i)=>{
+        const o={}; headers.forEach((h,idx)=> o[h]=cells[idx]||'');
+        return normalizeItem(o,i);
+      });
+    }
+
+    console.warn('Formato da planilha não reconhecido. Use gviz out:json ou export?format=csv');
+    return null;
+  }
+
+  function splitCSV(line){
+    const out=[]; let cur=''; let q=false;
+    for(let i=0;i<line.length;i++){
+      const ch = line[i];
+      if(ch==='"'){ q=!q; continue; }
+      if(ch===',' && !q){ out.push(cur); cur=''; continue; }
+      cur+=ch;
+    }
+    out.push(cur); return out.map(s=>s.replace(/^\s+|\s+$/g,''));
+  }
+
+  function toNumber(x){
+    if(typeof x==='number') return x;
+    if(!x) return 0;
+    // Remove R$ e separadores no formato BR
+    const s = String(x).replace(/[^0-9,.-]/g,'').replace(/\.(?=\d{3}(\D|$))/g,'').replace(',', '.');
+    const n = parseFloat(s); return isNaN(n)? 0: n;
+  }
+
+  function normalizeItem(o,i){
+    // Espera colunas: id, status, categoria, titulo, descricao, preco, link, imagem, prioridade
+    const item = {
+      id: String(o.id||i+1),
+      status: String(o.status||'disponivel').toLowerCase().trim(),
+      categoria: String(o.categoria||'Outros').trim(),
+      titulo: String(o.titulo||'Item').trim(),
+      descricao: String(o.descricao||'').trim(),
+      preco: toNumber(o.preco),
+      link: String(o.link||o.loja||'').trim(),
+      imagem: String(o.imagem||o.foto||'').trim(),
+      prioridade: parseInt(o.prioridade|| (i+1),10) || (i+1)
+    };
+    return item;
+  }
+
+  // ================
+  // RENDERIZAÇÃO
+  // ================
+  let ITEMS = [];
+
+  function render(){
+    const term = qs('#q').value.toLowerCase().trim();
+    const cat = qs('#cat').value;
+    const only = qs('#onlyAvail').checked;
+    const sort = qs('#sort').value;
+
+    let arr = [...ITEMS];
+    if(term){ arr = arr.filter(i=> (i.titulo+" "+i.descricao+" "+i.categoria).toLowerCase().includes(term)); }
+    if(cat && cat!=="*"){ arr = arr.filter(i=> i.categoria===cat); }
+    if(only){ arr = arr.filter(i=> i.status==='disponivel'); }
+
+    if(sort==='preco-asc'){ arr.sort((a,b)=>a.preco-b.preco); }
+    else if(sort==='preco-desc'){ arr.sort((a,b)=>b.preco-a.preco); }
+    else if(sort==='titulo'){ arr.sort((a,b)=> a.titulo.localeCompare(b.titulo)); }
+    else { arr.sort((a,b)=> a.prioridade-b.prioridade); }
+
+    const wrap = qs('#products'); wrap.innerHTML='';
+    if(arr.length===0){ qs('#emptyState').classList.remove('hidden'); return; }
+    qs('#emptyState').classList.add('hidden');
+
+    for(const it of arr){
+      const card = el('div',{className:`product ${it.status}`} );
+      const img = el('div',{className:'img'}); if(it.imagem){ img.style.backgroundImage = `url('${it.imagem}')`; }
+      const badge = el('div',{className:'badge', innerText: it.categoria});
+      const status = el('div',{className:'status'}); status.appendChild(el('span',{innerText: it.status.toUpperCase()}));
+      const content = el('div',{className:'content'});
+      const title = el('div',{className:'title', innerText: it.titulo});
+      const desc = el('div',{className:'muted', innerText: it.descricao});
+      const price = el('div',{className:'price', innerText: it.preco? fmtBRL(it.preco): '—'});
+      const tiny = el('div',{className:'tiny', innerText: it.link? new URL(it.link).hostname.replace('www.',''): ''});
+      const actions = el('div',{className:'actions'});
+
+      const btnReserve = el('a',{className:'btn warn', target:'_blank', rel:'noopener', innerText:'Reservar (WhatsApp)'});
+      btnReserve.href = waLink(`Oi! Quero presentear com: ${it.titulo} (${it.categoria})${it.preco? ' — '+fmtBRL(it.preco): ''}. Link: ${it.link||'-'}`);
+
+      const btnBuy = el('a',{className:'btn alt', target:'_blank', rel:'noopener', innerText:'Comprar na loja'});
+      btnBuy.href = it.link || '#';
+
+      const btnCopy = el('button',{className:'btn ghost', innerText:'Copiar nome'});
+      btnCopy.addEventListener('click',()=>{ navigator.clipboard.writeText(it.titulo).then(()=>{ btnCopy.innerText='Copiado!'; setTimeout(()=>btnCopy.innerText='Copiar nome',1200); }); });
+
+      if(it.status!=='disponivel'){
+        btnReserve.classList.add('disabled'); btnReserve.style.pointerEvents='none'; btnReserve.style.filter='grayscale(1)';
+        btnBuy.classList.add('disabled'); btnBuy.style.pointerEvents='none'; btnBuy.style.filter='grayscale(1)';
+      }
+
+      actions.append(btnReserve, btnBuy, btnCopy);
+      content.append(title, desc, price, tiny, actions);
+      card.append(img, badge, status, content);
+      wrap.appendChild(card);
+    }
+  }
+
+  function buildCategoryFilter(){
+    const cats = Array.from(new Set(ITEMS.map(i=>i.categoria))).sort();
+    const sel = qs('#cat'); sel.innerHTML='';
+    sel.appendChild(el('option',{value:'*',innerText:'Todas as categorias'}));
+    for(const c of cats){ sel.appendChild(el('option',{value:c,innerText:c})) }
+  }
+
+  // ================
+  // INICIALIZAÇÃO
+  // ================
+  async function init(){
+    // Header
+    qs('#coupleTitle').textContent = `Lista de Presentes — ${CONFIG.coupleNames}`;
+    qs('#dateHuman').textContent = humanDateShort(CONFIG.weddingDateISO);
+    qs('#dateFull').textContent = humanDateLong(CONFIG.weddingDateISO);
+    qs('#venueName').textContent = CONFIG.venueName;
+    qs('#venueFull').textContent = CONFIG.venueName;
+    qs('#address').textContent = CONFIG.venueAddress;
+    qs('#mapsLink').href = CONFIG.mapsLink; qs('#venueMap2').href = CONFIG.mapsLink;
+
+    // Pix
+    qs('#pixKeyText').textContent = CONFIG.pixKey || '—';
+    qs('#openPixWhats').href = waLink('Enviei um presente via Pix. Segue o comprovante:');
+    if(CONFIG.pixQrImageUrl){
+      qs('#pixQrWrap').classList.remove('hidden');
+      qs('#pixQrImg').src = CONFIG.pixQrImageUrl;
+    }
+
+    // RSVP & WhatsApp contato
+    if(CONFIG.rsvpFormUrl){ qs('#rsvpBtn').href = CONFIG.rsvpFormUrl; } else { qs('#rsvpBtn').classList.add('hidden') }
+    qs('#whatsContact').href = waLink('Olá! Gostaria de falar sobre o casamento.');
+
+    // Ações de topo
+    qs('#addToCalendar').addEventListener('click', downloadICS);
+    qs('#shareSite').addEventListener('click', shareSite);
+    qs('#copyPix').addEventListener('click',()=>{
+      navigator.clipboard.writeText(CONFIG.pixKey||'').then(()=>{
+        const b = qs('#copyPix'); const old = b.textContent; b.textContent='Copiado!'; setTimeout(()=>b.textContent=old, 1200);
+      });
+    });
+
+    // Buscar dados
+    let data = await fetchSheet();
+    if(!data){ data = STATIC_ITEMS; }
+    ITEMS = data;
+    buildCategoryFilter();
+    render();
+
+    // Filtros
+    qs('#q').addEventListener('input', render);
+    qs('#cat').addEventListener('change', render);
+    qs('#sort').addEventListener('change', render);
+    qs('#onlyAvail').addEventListener('change', render);
+    qs('#refresh').addEventListener('click', async()=>{ const d = await fetchSheet(); if(d){ ITEMS=d; buildCategoryFilter(); render(); } });
+
+    // Auto-refresh periódico
+    if(CONFIG.autoRefreshMinutes>0){ setInterval(async()=>{ const d = await fetchSheet(); if(d){ ITEMS=d; buildCategoryFilter(); render(); } }, CONFIG.autoRefreshMinutes*60000); }
+
+    startCountdown();
+  }
+
+  window.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
