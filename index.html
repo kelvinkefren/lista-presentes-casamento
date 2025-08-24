@@ -180,10 +180,10 @@
     pixKey: "71988183846", // e-mail, CPF, telefone, aleatória
     pixQrImageUrl: "bradesco.png", // opcional: caminho para imagem do QR
     // Fonte de dados: use apenas UMA. Recomendo a planilha do Google publicada.
-    sheetUrl: "https://docs.google.com/spreadsheets/d/11-eUVwz6axvkVt1io78a15XF859dx0SYHS31TUZJ4cU/gviz/tq?tqx=out:json",
     autoRefreshMinutes: 5,
     moeda: "BRL",
     // >>> ARQUIVOS LOCAIS (use um destes e deixe sheetUrl vazio) <<<
+    sheetUrl: "".//"https://docs.google.com/spreadsheets/d/11-eUVwz6axvkVt1io78a15XF859dx0SYHS31TUZJ4cU/gviz/tq?tqx=out:json",
     localExcelFile: "produtos.xlsx", // ex.: "produtos.xlsx" (mesma pasta do index.html)
     localCsvFile: ""                 // ex.: "produtos.csv" (opcional)
   }
@@ -269,7 +269,7 @@
         if(!r.ok) throw new Error('Falha ao carregar Excel local: '+r.status);
         return r.arrayBuffer();
       });
-      const wb = XLSX.read(new Uint8Array(buf), {type:'array'});
+      const wb = XLSX.read(buf, {type:'array'});
       const ws = wb.Sheets[wb.SheetNames[0]];
       const rows = XLSX.utils.sheet_to_json(ws, {header:1, defval:''});
       const headers = (rows.shift()||[]).map(h => (String(h||'').toLowerCase()));
@@ -285,7 +285,7 @@
         if(!r.ok) throw new Error('Falha ao carregar CSV local: '+r.status);
         return r.text();
       });
-      const rows = text.split().filter(l=>l.trim().length>0).map(l=> splitCSV(l));
+      const rows = text.split(/\r?\n/).filter(l=>l.trim().length>0).map(l=> splitCSV(l));
       const headers = (rows.shift()||[]).map(h=> (h||'').toLowerCase());
       return rows.map((cells,i)=>{
         const o={}; headers.forEach((h,idx)=> o[h]=cells[idx]||'');
@@ -324,7 +324,7 @@
 
         // CSV
         if(url.includes('export?format=csv') || url.endsWith('.csv')){
-          const rows = text.split().filter(Boolean).map(l=> splitCSV(l));
+          const rows = text.split(/\r?\n/).filter(Boolean).map(l=> splitCSV(l));
           const headers = (rows.shift()||[]).map(h=> (h||'').toLowerCase());
           return rows.map((cells,i)=>{
             const o={}; headers.forEach((h,idx)=> o[h]=cells[idx]||'');
@@ -411,7 +411,9 @@
       const title = el('div',{className:'title', innerText: it.titulo});
       const desc = el('div',{className:'muted', innerText: it.descricao});
       const price = el('div',{className:'price', innerText: it.preco? fmtBRL(it.preco): '—'});
-      const tiny = el('div',{className:'tiny', innerText: it.link? new URL(it.link).hostname.replace('www.',''): ''});
+      let host = "";
+      try { if (it.link) host = new URL(it.link, location.href).hostname.replace(/^www\./,""); } catch(_) {}
+      const tiny = el('div',{className:'tiny', innerText: host});
       const actions = el('div',{className:'actions'});
 
       const btnReserve = el('a',{className:'btn warn', target:'_blank', rel:'noopener', innerText:'Reservar (WhatsApp)'});
