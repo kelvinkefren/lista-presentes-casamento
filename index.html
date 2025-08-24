@@ -80,6 +80,7 @@
     .pill{display:inline-flex;gap:8px;align-items:center}
     .hidden{display:none}
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
 <body>
   <div class="wrap">
@@ -170,7 +171,7 @@
   const CONFIG = {
     coupleNames: "Kelvin & Tamaiale",
     // Formato ISO com timezone de Salvador (UTC-03)
-    weddingDateISO: "2025-08-27T12:00:00-04:00",
+    weddingDateISO: "2025-08-27T12:00:00-03:00",
     venueName: "Cartório Vitória",
     venueAddress: " R. Professor Martagão Gesteira, 477 - Graça, Salvador",
     mapsLink: "https://www.google.com/maps/place/Cart%C3%B3rio+de+Registro+Civil+das+Pessoas+Naturais+do+Subdistrito+da+Vit%C3%B3ria/@-13.002347,-38.5250939,1083m/data=!3m2!1e3!4b1!4m6!3m5!1s0x716037e88b3d331:0x4b8d9a28c97501de!8m2!3d-13.002347!4d-38.522519!16s%2Fg%2F1q62lf0wk?entry=ttu&g_ep=EgoyMDI1MDgxOS4wIKXMDSoASAFQAw%3D%3D",
@@ -179,10 +180,13 @@
     pixKey: "71988183846", // e-mail, CPF, telefone, aleatória
     pixQrImageUrl: "bradesco.png", // opcional: caminho para imagem do QR
     // Fonte de dados: use apenas UMA. Recomendo a planilha do Google publicada.
-    sheetUrl: "https://docs.google.com/spreadsheets/d/11-eUVwz6axvkVt1io78a15XF859dx0SYHS31TUZJ4cU/gviz/tq?tqx=out:json", // ex: https://docs.google.com/spreadsheets/d/ID/gviz/tq?tqx=out:json OU .../export?format=csv
+    sheetUrl: "https://docs.google.com/spreadsheets/d/11-eUVwz6axvkVt1io78a15XF859dx0SYHS31TUZJ4cU/gviz/tq?tqx=out:json",
     autoRefreshMinutes: 5,
-    moeda: "BRL"
-  };
+    moeda: "BRL",
+    // >>> ARQUIVOS LOCAIS (use um destes e deixe sheetUrl vazio) <<<
+    localExcelFile: "produtos.xlsx", // ex.: "produtos.xlsx" (mesma pasta do index.html)
+    localCsvFile: ""                 // ex.: "produtos.csv" (opcional)
+  }
 
   // Itens estáticos de exemplo (use caso não queira planilha agora)
   const STATIC_ITEMS = [
@@ -196,7 +200,8 @@
   // ================
   // UTILITÁRIOS
   // ================
-  const fmtBRL = v => new Intl.NumberFormat('pt-BR',{style:'currency',currency:CONFIG.moeda}).format(v||0);
+  const fmtBRL = v => new Intl.NumberFormat('pt-BR',{style:'currency',currency:CONFIG.moeda}).format((v===undefined||v===null||isNaN(v))?0:Number(v));
+  const DEFAULT_IMG = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='800' height='600'><rect fill='%230b1225' width='100%' height='100%'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%2364758b' font-family='sans-serif' font-size='24'>Sem imagem</text></svg>";
   const qs = s => document.querySelector(s);
   const el = (tag, attrs={}) => Object.assign(document.createElement(tag), attrs);
 
@@ -258,33 +263,80 @@
   // CARREGAR DADOS (Planilha)
   // =========================
   async function fetchSheet(){
-    if(!CONFIG.sheetUrl){ return null; }
-    const url = CONFIG.sheetUrl.trim();
-    const text = await fetch(url).then(r=>r.text());
-
-    // gviz JSON
-    if(url.includes('tqx=out:json')){
-      const jsonText = text.substring(text.indexOf('{'), text.lastIndexOf('}')+1);
-      const data = JSON.parse(jsonText);
-      const cols = data.table.cols.map(c=> (c.label||c.id||'').toLowerCase());
-      return data.table.rows.map((r,i)=>{
-        const o={};
-        r.c.forEach((cell,idx)=>{ o[cols[idx]||`col${idx}`] = cell? cell.v: '' });
+    // 1) Arquivo Excel local (.xlsx)
+    if (CONFIG.localExcelFile && CONFIG.localExcelFile.trim()){
+      const buf = await fetch(CONFIG.localExcelFile).then(r=>{
+        if(!r.ok) throw new Error('Falha ao carregar Excel local: '+r.status);
+        return r.arrayBuffer();
+      });
+      const wb = XLSX.read(new Uint8Array(buf), {type:'array'});
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(ws, {header:1, defval:''});
+      const headers = (rows.shift()||[]).map(h => (String(h||'').toLowerCase()));
+      return rows.filter(r => r.some(v => String(v).trim().length>0)).map((cells,i)=>{
+        const o={}; headers.forEach((h,idx)=> o[h]=cells[idx]??'');
         return normalizeItem(o,i);
       });
     }
 
-    // CSV
-    if(url.includes('export?format=csv') || url.endsWith('.csv')){
-      const rows = text.split(/\r?\n/).filter(Boolean).map(l=> splitCSV(l));
-      const headers = rows.shift().map(h=> (h||'').toLowerCase());
+    // 2) Arquivo CSV local (.csv)
+    if (CONFIG.localCsvFile && CONFIG.localCsvFile.trim()){
+      const text = await fetch(CONFIG.localCsvFile).then(r=>{
+        if(!r.ok) throw new Error('Falha ao carregar CSV local: '+r.status);
+        return r.text();
+      });
+      const rows = text.split().filter(l=>l.trim().length>0).map(l=> splitCSV(l));
+      const headers = (rows.shift()||[]).map(h=> (h||'').toLowerCase());
       return rows.map((cells,i)=>{
         const o={}; headers.forEach((h,idx)=> o[h]=cells[idx]||'');
         return normalizeItem(o,i);
       });
     }
 
-    console.warn('Formato da planilha não reconhecido. Use gviz out:json ou export?format=csv');
+    // 3) Planilha online (gviz/csv)
+    if(!CONFIG.sheetUrl){ return null; }
+    const raw = CONFIG.sheetUrl.trim();
+    const candidates = [raw];
+    if(/^https?:\/\//.test(raw)){
+      const prox = 'https://r.jina.ai/http://'+ raw.replace(/^https?:\/\//,'');
+      candidates.push(prox);
+    } else if(/^[A-Za-z0-9-_]{20,}$/.test(raw)){
+      // Se colou apenas o ID do Google Sheets, montamos a URL GVIZ automaticamente
+      candidates.unshift(`https://docs.google.com/spreadsheets/d/${raw}/gviz/tq?tqx=out:json`);
+    }
+
+    for(const url of candidates){
+      try{
+        const text = await fetch(url).then(r=>{ if(!r.ok) throw new Error('HTTP '+r.status); return r.text(); });
+
+        // gviz JSON
+        if(url.includes('tqx=out:json')){
+          const start = text.indexOf('{'); const end = text.lastIndexOf('}');
+          if(start === -1 || end === -1){ continue; }
+          const data = JSON.parse(text.substring(start, end+1));
+          const cols = (data.table?.cols||[]).map(c=> (c.label||c.id||'').toLowerCase());
+          const rows = data.table?.rows || [];
+          return rows.map((r,i)=>{
+            const o={}; (r.c||[]).forEach((cell,idx)=>{ o[cols[idx]||`col${idx}`] = cell? cell.v: '' });
+            return normalizeItem(o,i);
+          });
+        }
+
+        // CSV
+        if(url.includes('export?format=csv') || url.endsWith('.csv')){
+          const rows = text.split().filter(Boolean).map(l=> splitCSV(l));
+          const headers = (rows.shift()||[]).map(h=> (h||'').toLowerCase());
+          return rows.map((cells,i)=>{
+            const o={}; headers.forEach((h,idx)=> o[h]=cells[idx]||'');
+            return normalizeItem(o,i);
+          });
+        }
+
+      }catch(err){
+        console.warn('Falha ao buscar', url, err);
+      }
+    }
+
     return null;
   }
 
@@ -350,7 +402,9 @@
 
     for(const it of arr){
       const card = el('div',{className:`product ${it.status}`} );
-      const img = el('div',{className:'img'}); if(it.imagem){ img.style.backgroundImage = `url('${it.imagem}')`; }
+      const img = el('div',{className:'img'});
+      const imgUrl = (it.imagem && String(it.imagem).trim().length>0) ? it.imagem : DEFAULT_IMG;
+      img.style.backgroundImage = `url('${imgUrl}')`;
       const badge = el('div',{className:'badge', innerText: it.categoria});
       const status = el('div',{className:'status'}); status.appendChild(el('span',{innerText: it.status.toUpperCase()}));
       const content = el('div',{className:'content'});
@@ -423,8 +477,9 @@
     });
 
     // Buscar dados
-    let data = await fetchSheet();
-    if(!data){ data = STATIC_ITEMS; }
+    let data = null;
+    try { data = await fetchSheet(); } catch(e){ console.warn('fetchSheet error', e); }
+    if(!Array.isArray(data) || data.length===0){ data = STATIC_ITEMS; }
     ITEMS = data;
     buildCategoryFilter();
     render();
