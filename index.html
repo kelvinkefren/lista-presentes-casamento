@@ -9,22 +9,22 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Great+Vibes&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
   <style>
     :root{
-      --paper:#F5EEE9;            /* papel bege */
-      --paper-2:#F2E7DF;          /* variação */
-      --ink:#2a2a2a;              /* texto */
-      --muted:#6c6c6c;            /* texto fraco */
-      --accent:#3C8C6F;           /* verde musgo */
-      --accent-2:#C09D5C;         /* dourado */
-      --chip:#fff;                /* chips claros */
-      --edge:#d8cfc7;             /* borda sutil */
+      --paper:#F5EEE9;
+      --paper-2:#F2E7DF;
+      --ink:#2a2a2a;
+      --muted:#6c6c6c;
+      --accent:#3C8C6F;
+      --accent-2:#C09D5C;
+      --chip:#fff;
+      --edge:#d8cfc7;
       --radius:18px;
       --shadow:0 10px 30px rgba(0,0,0,.12);
     }
     *{box-sizing:border-box}
     html,body{margin:0; color:var(--ink); font-family:"Cormorant Garamond", ui-serif, Georgia, serif; background:var(--paper);}
-    /* textura de papel com manchas bem sutis */
     body:before{content:""; position:fixed; inset:0; pointer-events:none; opacity:.30; mix-blend-mode:multiply;
       background-image:
         radial-gradient(1000px 600px at -10% -5%, var(--paper-2), transparent 55%),
@@ -37,8 +37,7 @@
     }
 
     /* NAV */
-    .nav{position:sticky; top:0; z-index:20; background:color-mix(in oklab, var(--paper), white 30%);
-      border-bottom:1px solid var(--edge);}
+    .nav{position:sticky; top:0; z-index:20; background:color-mix(in oklab, var(--paper), white 30%); border-bottom:1px solid var(--edge);}
     .nav .inner{max-width:1200px; margin:0 auto; padding:14px 18px; display:flex; align-items:center; gap:20px;}
     .brand{font-weight:600; letter-spacing:.12em;}
     .brand small{font-family:system-ui, -apple-system, Segoe UI, Roboto, sans-serif; color:var(--muted); letter-spacing:0;}
@@ -50,12 +49,12 @@
     /* HERO PAPEL RASGADO */
     .hero{position:relative; max-width:1200px; margin:24px auto 10px; padding:0 16px;}
     .torn-wrap{position:relative; border-radius:0; box-shadow:var(--shadow)}
-    .torn{width:100%; height:auto; display:block; aspect-ratio:16/10;}
+    .torn{width:100%; height:auto; display:block; aspect-ratio:16/12;}
     .hero-overlay{position:absolute; inset:auto 8% 10% 8%; text-align:center; color:white; text-shadow:0 1px 20px rgba(0,0,0,.35)}
     .hero-date{font-size:clamp(16px,2vw,20px); letter-spacing:.22em}
     .hero-names{font-family:"Great Vibes", cursive; font-weight:400; font-size:clamp(42px,5.6vw,74px); margin-top:10px}
 
-    /* miolos */
+    /* layout geral */
     .wrap{max-width:1100px; margin:0 auto; padding:18px}
     .section{margin:28px 0}
     .title{font-weight:600; font-size:28px}
@@ -77,20 +76,49 @@
     @media(max-width:1000px){.products{grid-template-columns:repeat(2,1fr)}}
     @media(max-width:640px){.products{grid-template-columns:1fr}}
     .product{background:#fff; border:1px solid var(--edge); border-radius:16px; overflow:hidden; display:flex; flex-direction:column}
-    .product .img{aspect-ratio:4/3; background:#eee; display:grid; place-items:center}
+    .product .img{aspect-ratio:4/3; background:#eee; display:grid; place-items:center; position:relative; overflow:hidden}
     .product .img img{width:100%; height:100%; object-fit:cover; display:block}
     .product .content{padding:14px; display:flex; flex-direction:column; gap:8px}
     .product .price{font-weight:700}
     .product .actions{display:flex; gap:8px; flex-wrap:wrap; margin-top:auto}
-    .badge{position:absolute; top:10px; left:10px; background:#fff; border:1px solid var(--edge); color:var(--ink); padding:6px 10px; border-radius:999px; font-size:12px}
     .tiny{font-size:12px; color:var(--muted)}
-
     footer{opacity:.9; margin:40px 0 80px; text-align:center}
 
     /* elementos decorativos (folhas) */
     .decor{position:fixed; z-index:0; opacity:.7; pointer-events:none}
     .decor.left{left:-60px; top:110px; width:220px}
     .decor.right{right:-40px; bottom:90px; width:240px}
+
+    /* === PIX bloco === */
+    .pix-row{display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin-top:10px}
+    .pix-qr{display:flex; justify-content:center; margin-top:14px}
+
+    /* === Overlay descrição no hover da imagem === */
+    .product .img .hover-desc{
+      position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+      text-align:center; padding:12px; color:#fff;
+      background:linear-gradient(180deg, rgba(0,0,0,0) 10%, rgba(0,0,0,.68) 85%);
+      opacity:0; transform:translateY(8px);
+      transition:opacity .25s ease, transform .25s ease;
+      pointer-events:none; font-size:14px; line-height:1.35;
+    }
+    .product .img:hover .hover-desc{opacity:1; transform:translateY(0)}
+
+    /* ===== Modal PIX ===== */
+    .modal{position:fixed; inset:0; display:none; align-items:center; justify-content:center;
+      background:rgba(0,0,0,.55); z-index:60; padding:18px}
+    .modal.show{display:flex}
+    .modal .box{width:100%; max-width:520px; background:#fff; color:var(--ink);
+      border:1px solid var(--edge); border-radius:16px; box-shadow:var(--shadow); padding:18px}
+    .modal .box h3{margin:0 0 8px 0; font-size:22px}
+    .modal .box .muted{margin-top:4px}
+    .modal .qr{display:flex; justify-content:center; margin:14px 0}
+    .modal .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+    .modal .code{width:100%; min-height:90px; border:1px solid var(--edge);
+      border-radius:12px; padding:10px; font-family:ui-monospace, SFMono-Regular, Menlo, monospace}
+    .modal .actions{display:flex; gap:10px; margin-top:10px; justify-content:flex-end}
+    .modal .close{appearance:none; border:0; background:#fff; border:1px solid var(--edge);
+      border-radius:999px; padding:6px 10px; cursor:pointer}
   </style>
 </head>
 <body>
@@ -107,14 +135,9 @@
     </div>
   </div>
 
-  <!-- DECORAÇÕES (folhas em SVG, inline) -->
+  <!-- DECORAÇÕES -->
   <svg class="decor left" viewBox="0 0 120 220" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <defs>
-      <linearGradient id="g1" x1="0" x2="1" y1="0" y2="1">
-        <stop offset="0" stop-color="#E9B27A"/>
-        <stop offset="1" stop-color="#D77A57"/>
-      </linearGradient>
-    </defs>
+    <defs><linearGradient id="g1" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#E9B27A"/><stop offset="1" stop-color="#D77A57"/></linearGradient></defs>
     <g fill="url(#g1)" opacity=".7">
       <path d="M20 10c22 36-2 60-10 92-6 26 9 46 40 64-12-32-4-52 9-72 14-22 9-52-39-84z"/>
       <path d="M70 45c18 28-3 45-13 67-8 19 4 34 28 48-8-24-3-39 6-54 10-17 6-39-21-61z"/>
@@ -130,15 +153,20 @@
   <!-- HERO com máscara "papel rasgado" -->
   <header class="hero" id="topo">
     <div class="torn-wrap">
-      <!-- a máscara é um path irregular; a imagem vem do CONFIG.heroImage -->
-      <svg class="torn" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-label="Foto do casal">
+      <svg class="torn" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet" aria-label="Foto do casal">
         <defs>
           <clipPath id="tornMask" clipPathUnits="objectBoundingBox">
-            <!-- path aproximando um retângulo com bordas rasgadas -->
-            <path d="M0.03,0.20 C0.10,0.18,0.18,0.22,0.25,0.20 C0.32,0.18,0.38,0.22,0.45,0.21 C0.52,0.20,0.60,0.22,0.66,0.20 C0.72,0.18,0.78,0.22,0.86,0.21 C0.93,0.20,0.97,0.22,1.00,0.24 L1.00,0.80 C0.96,0.82,0.92,0.78,0.86,0.79 C0.79,0.80,0.74,0.76,0.67,0.78 C0.60,0.80,0.54,0.76,0.47,0.78 C0.40,0.80,0.34,0.76,0.27,0.77 C0.20,0.78,0.13,0.75,0.08,0.77 C0.04,0.79,0.02,0.78,0.00,0.76 L0.00,0.26 C0.02,0.22,0.01,0.22,0.03,0.20 z" />
+            <path d="M0.00,0.00
+                     C0.10,0.01,0.20,0.05,0.30,0.00
+                     C0.40,0.01,0.60,0.05,0.70,0.00
+                     C0.80,0.01,0.90,0.05,1.00,0.00
+                     L1.00,0.95
+                     C0.90,0.97,0.80,0.93,0.70,0.95
+                     C0.60,0.97,0.40,0.93,0.30,0.95
+                     C0.20,0.97,0.10,0.93,0.00,0.95 Z" />
           </clipPath>
         </defs>
-        <image id="heroImageEl" clip-path="url(#tornMask)" href="" width="1600" height="900" preserveAspectRatio="xMidYMid slice"/>
+        <image id="heroImageEl" clip-path="url(#tornMask)" href="" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" y="50"/>
       </svg>
       <div class="hero-overlay">
         <div class="hero-date">27 · 08 · 2025</div>
@@ -155,12 +183,17 @@
           <div class="body">
             <div class="title">Contribuir via PIX</div>
             <p class="muted">Se preferir, você pode presentear com qualquer valor via Pix. 💚</p>
-            <div class="toolbar">
+
+            <!-- Chave PIX centralizada com botão ao lado -->
+            <div class="pix-row">
               <span class="btn alt" id="pixKeyText">(configure a chave no código)</span>
               <button class="btn" id="copyPix">Copiar chave</button>
-              <a class="btn ghost" id="openPixWhats" target="_blank" rel="noopener">Enviar comprovante (WhatsApp)</a>
             </div>
-            <div style="margin-top:14px"><img id="pixQrImg" alt="QR Code Pix" style="max-width:320px;border-radius:12px;border:1px solid var(--edge)"/></div>
+
+            <!-- QR code estático centralizado (opcional) -->
+            <div class="pix-qr">
+              <img id="pixQrImg" alt="QR Code Pix" style="max-width:320px;border-radius:12px;border:1px solid var(--edge)"/>
+            </div>
           </div>
         </div>
       </div>
@@ -169,7 +202,7 @@
     <!-- PRESENTES -->
     <section id="presentes" class="section">
       <div class="title">Lista de Presentes</div>
-      <p class="muted">Escolha um item, clique em <em>Reservar</em> para nos avisar no WhatsApp e depois <em>Comprar</em> no link da loja.</p>
+      <p class="muted">Escolha um item e clique em <strong>Comprar</strong> para gerar o QR Code Pix com o valor exato do presente. ✨</p>
       <div class="controls">
         <input id="q" type="search" placeholder="Buscar por nome, categoria..."/>
         <select id="cat"></select>
@@ -209,8 +242,26 @@
       </div>
     </section>
 
-    <footer class="muted">Feito com carinho 💚 — publique no GitHub Pages (coloque <code>index.html</code>, <code>produtos.xlsx</code> e sua foto <code>hero.jpg</code> na mesma pasta).</footer>
+    <footer class="muted">Feito com carinho 💚 — publique no GitHub Pages (coloque <code>index.html</code>, <code>produtos.xlsx</code> e sua foto <code>hero.jpeg</code> na mesma pasta).</footer>
   </main>
+
+  <!-- Modal PIX por produto -->
+  <div id="pixModal" class="modal" aria-hidden="true">
+    <div class="box">
+      <div class="row" style="justify-content:space-between">
+        <h3 id="pixModalTitle">Pagar com Pix</h3>
+        <button class="close" id="pixModalClose">Fechar</button>
+      </div>
+      <div class="muted" id="pixModalSubtitle"></div>
+
+      <div class="qr"><img id="pixModalImg" alt="QR Code Pix" style="max-width:320px;border-radius:12px;border:1px solid var(--edge)"></div>
+
+      <textarea id="pixModalCode" class="code" readonly></textarea>
+      <div class="actions">
+        <button class="btn alt" id="pixCopyCode">Copiar código Pix</button>
+      </div>
+    </div>
+  </div>
 
   <script>
   // =====================
@@ -225,13 +276,18 @@
     venueAddress: "R. Professor Martagão Gesteira, 477 - Graça, Salvador",
     mapsLink: "https://www.google.com/maps/place/Cart%C3%B3rio+de+Registro+Civil+das+Pessoas+Naturais+do+Subdistrito+da+Vit%C3%B3ria/@-13.002347,-38.522519,17z",
 
-    // IMAGEM DO TOPO — coloque o arquivo junto do index.html (ex.: hero.jpg)
+    // IMAGEM DO TOPO
     heroImage: "hero.jpeg",
 
     // Contato / RSVP / PIX
     whatsappNumber: "71988183846",
     rsvpFormUrl: "https://forms.gle/",
-    pixKey: "71988183846",
+    pixKey: "+5571988183846",
+    // Nome e cidade impressos no payload PIX (CAIXA ALTA, limites oficiais)
+    pixName: "KELVIN KEFREN CARVALHO FE", // máx. 25 chars
+    pixCity: "SALVADOR",                  // máx. 15 chars
+
+    // QR estático opcional na seção PIX
     pixQrImageUrl: "bradesco.png",
 
     // Planilha: escolha SÓ UMA fonte (xlsx local OU sheetUrl)
@@ -242,7 +298,7 @@
     autoRefreshMinutes: 5
   };
 
-  // utilitários
+  // ========= Utils
   const qs = s => document.querySelector(s);
   const el = (tag, attrs={}) => Object.assign(document.createElement(tag), attrs);
   const fmtBRL = v => new Intl.NumberFormat('pt-BR',{style:'currency',currency:CONFIG.moeda}).format((v===undefined||v===null||isNaN(v))?0:Number(v));
@@ -259,6 +315,7 @@
     prioridade: parseInt(map.prioridade||(i+1),10) || (i+1)
   }}
 
+  // ====== Leitura da planilha (xlsx/csv/sheets)
   async function fetchSheet(){
     // 1) XLSX local
     if (CONFIG.localExcelFile && CONFIG.localExcelFile.trim()){
@@ -296,15 +353,124 @@
     return null
   }
 
-  // RENDER
+  // ===== Gerador de payload PIX (EMV QR)
+  function tlv(id, value){
+    const len = String(value.length).padStart(2,'0');
+    return `${id}${len}${value}`;
+  }
+  function crc16(str){
+    let crc = 0xFFFF;
+    for (let i=0;i<str.length;i++){
+      crc ^= (str.charCodeAt(i) << 8);
+      for (let j=0;j<8;j++){
+        crc = (crc & 0x8000) ? ((crc << 1) ^ 0x1021) : (crc << 1);
+        crc &= 0xFFFF;
+      }
+    }
+    return crc.toString(16).toUpperCase().padStart(4,'0');
+  }
+  function asciiClean(s){
+    return String(s||'')
+      .normalize('NFD').replace(/[\u0300-\u036f]/g,'') // tira acentos
+      .replace(/[^\x20-\x7E]/g,'');                    // mantém ASCII visível
+  }
+  function formatPixKey(key){
+    let k = String(key||'').trim();
+    // se for telefone com 11 dígitos (DDD+numero), prefixa +55
+    if (/^\d{11}$/.test(k)) k = '+55' + k;
+    return k;
+  }
+  function buildPixPayload({key, amount, name, city, txid="", description=""}){
+    const nameU = asciiClean(name).toUpperCase().slice(0,25) || 'RECEBEDOR';
+    const cityU = asciiClean(city).toUpperCase().slice(0,15) || 'CIDADE';
+    const desc  = asciiClean(description).slice(0,99);
+
+    // Merchant Account Information (ID 26)
+    const gui   = tlv('00','BR.GOV.BCB.PIX');
+    const k     = tlv('01', formatPixKey(key));
+    const dsc   = desc ? tlv('02', desc) : '';
+    const mai   = tlv('26', gui + k + dsc);
+
+    // Campos raiz obrigatórios
+    const pfi   = tlv('00','01');     // Payload Format Indicator
+    const poim  = tlv('01','11');     // Point of Initiation Method: 11 = estático (ESSENCIAL)
+    const mcc   = tlv('52','0000');
+    const curr  = tlv('53','986');    // BRL
+    const amt   = amount ? tlv('54', Number(amount).toFixed(2)) : '';
+    const cc    = tlv('58','BR');
+    const nm    = tlv('59', nameU);
+    const ct    = tlv('60', cityU);
+    const add   = tlv('62', tlv('05', (asciiClean(txid)||'***').slice(0,25)));
+
+    const base  = pfi + poim + mai + mcc + curr + amt + cc + nm + ct + add + '6304';
+    const crc   = crc16(base);
+    return base + crc;
+  }
+
+  // Gera e exibe o modal com QR Code do PIX
+  function showPixModal({title, amount}){
+    if(!Number(amount)){ alert('Este item não possui valor definido.'); return; }
+
+    const payload = buildPixPayload({
+      key:  CONFIG.pixKey,
+      amount,
+      name: CONFIG.pixName,
+      city: CONFIG.pixCity,
+      txid: 'ITEM' + Date.now(),
+      description: title
+    });
+
+    const qrsrc = 'https://quickchart.io/qr?size=320&margin=2&text=' + encodeURIComponent(payload);
+
+    qs('#pixModalTitle').textContent   = 'Comprar: ' + title;
+    qs('#pixModalSubtitle').textContent= 'Valor: ' + fmtBRL(amount);
+    qs('#pixModalImg').src             = qrsrc;
+    qs('#pixModalCode').value          = payload;
+
+    qs('#pixModal').classList.add('show');
+  }
+  function hidePixModal(){ qs('#pixModal').classList.remove('show'); }
+  (function(){
+    const close = qs('#pixModalClose');
+    const copy  = qs('#pixCopyCode');
+
+    if (close) close.addEventListener('click', hidePixModal);
+
+    if (copy) copy.addEventListener('click', () => {
+      const code = qs('#pixModalCode')?.value || '';
+      navigator.clipboard.writeText(code).then(() => {
+        copy.textContent = 'Copiado!';
+        setTimeout(() => (copy.textContent = 'Copiar código Pix'), 1000);
+      });
+    });
+
+    const modal = qs('#pixModal');
+    if (modal) modal.addEventListener('click', e => {
+      if (e.target === modal) hidePixModal();
+    });
+  })();
+
+
+  // ===== Renderização dos cards
   let ITEMS=[];
-  function buildCategoryFilter(){const cats=Array.from(new Set(ITEMS.map(i=>i.categoria))).sort(); const sel=qs('#cat'); sel.innerHTML=''; sel.appendChild(el('option',{value:'*',innerText:'Todas as categorias'})); cats.forEach(c=> sel.appendChild(el('option',{value:c, innerText:c}))) }
+  function buildCategoryFilter(){
+    const cats=Array.from(new Set(ITEMS.map(i=>i.categoria))).sort();
+    const sel=qs('#cat'); sel.innerHTML='';
+    sel.appendChild(el('option',{value:'*',innerText:'Todas as categorias'}));
+    cats.forEach(c=> sel.appendChild(el('option',{value:c, innerText:c})))
+  }
+
   function render(){
-    const term=qs('#q').value.toLowerCase().trim(); const cat=qs('#cat').value; const only=qs('#onlyAvail').checked; const sort=qs('#sort').value;
+    const term=qs('#q').value.toLowerCase().trim();
+    const cat=qs('#cat').value;
+    const only=qs('#onlyAvail').checked;
+    const sort=qs('#sort').value;
+
     let arr=[...ITEMS];
     if(term) arr = arr.filter(i=> (i.titulo+" "+i.descricao+" "+i.categoria).toLowerCase().includes(term));
     if(cat && cat!=="*") arr = arr.filter(i=> i.categoria===cat);
     if(only) arr = arr.filter(i=> i.status==='disponivel');
+
     if(sort==='preco-asc') arr.sort((a,b)=>a.preco-b.preco);
     else if(sort==='preco-desc') arr.sort((a,b)=>b.preco-a.preco);
     else if(sort==='titulo') arr.sort((a,b)=> a.titulo.localeCompare(b.titulo));
@@ -312,34 +478,44 @@
 
     const wrap=qs('#products'); wrap.innerHTML='';
     if(arr.length===0){qs('#emptyState').style.display='block'; return} else qs('#emptyState').style.display='none';
+
     for(const it of arr){
       const card = el('div',{className:'product'});
+
+      // imagem + overlay com descrição
       const img = el('div',{className:'img'});
-      const picture = new Image(); picture.loading='lazy'; picture.referrerPolicy='no-referrer'; picture.src = (it.imagem&&it.imagem.trim())? it.imagem : DEFAULT_IMG; picture.onerror = ()=>{picture.src=DEFAULT_IMG};
+      const picture = new Image();
+      picture.loading='lazy';
+      picture.referrerPolicy='no-referrer';
+      picture.src = (it.imagem&&it.imagem.trim())? it.imagem : DEFAULT_IMG;
+      picture.onerror = ()=>{picture.src=DEFAULT_IMG};
       img.appendChild(picture);
+      if (it.descricao && it.descricao.trim()){
+        img.appendChild(el('div',{className:'hover-desc', innerText: it.descricao}));
+      }
+
+      // conteúdo (sem descrição aqui)
       const content = el('div',{className:'content'});
       const title = el('div',{style:'font-weight:600; font-size:18px', innerText: it.titulo});
-      const desc = el('div',{className:'muted', innerText: it.descricao});
       const price= el('div',{className:'price', innerText: it.preco? fmtBRL(it.preco): '—'});
       let host=''; try{ if(it.link) host = new URL(it.link, location.href).hostname.replace(/^www\./,''); }catch{}
       const tiny = el('div',{className:'tiny', innerText: host});
+
+      // ÚNICO botão "Comprar" -> abre modal com QR Pix
       const actions = el('div',{className:'actions'});
-      const btnReserve = el('a',{className:'btn', target:'_blank', rel:'noopener', innerText:'Reservar (WhatsApp)'});
-      btnReserve.href = `https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(`Oi! Quero presentear com: ${it.titulo} (${it.categoria})${it.preco? ' — '+fmtBRL(it.preco): ''}. Link: ${it.link||'-'}`)}`;
-      const btnBuy = el('a',{className:'btn alt', target:'_blank', rel:'noopener', innerText:'Comprar na loja'});
-      btnBuy.href = it.link || '#';
-      const btnCopy = el('button',{className:'btn ghost', innerText:'Copiar nome'});
-      btnCopy.onclick = ()=>{navigator.clipboard.writeText(it.titulo).then(()=>{btnCopy.innerText='Copiado!'; setTimeout(()=>btnCopy.innerText='Copiar nome',1200)})};
-      actions.append(btnReserve, btnBuy, btnCopy);
-      content.append(title, desc, price, tiny, actions);
+      const btnComprar = el('button',{className:'btn', innerText:'Comprar'});
+      btnComprar.addEventListener('click', ()=> showPixModal({ title: it.titulo, amount: it.preco }));
+      actions.append(btnComprar);
+
+      content.append(title, price, tiny, actions);
       card.append(img, content);
       wrap.appendChild(card);
     }
   }
 
-  // INIT
+  // ===== INIT
   async function init(){
-    // Preenche info textual
+    // cabeçalho & textos
     document.title = `${CONFIG.coupleNames} — ${CONFIG.dateNumbers}`;
     qs('.brand').firstChild && (qs('.brand').firstChild.textContent = CONFIG.initialsLogo);
     qs('.hero-date').textContent = CONFIG.dateNumbers;
@@ -349,27 +525,20 @@
     qs('#address').textContent = CONFIG.venueAddress;
     qs('#venueMap2').href = CONFIG.mapsLink;
 
-    // PIX
+    // PIX (seção)
     qs('#pixKeyText').textContent = CONFIG.pixKey || '—';
-    qs('#openPixWhats').href = `https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent('Enviei um presente via Pix. Segue o comprovante:')}`;
     if(CONFIG.pixQrImageUrl){ qs('#pixQrImg').src = CONFIG.pixQrImageUrl; }
-
-    // RSVP e contato
-    if(CONFIG.rsvpFormUrl) qs('#rsvpBtn').href = CONFIG.rsvpFormUrl; else qs('#rsvpBtn').style.display='none';
-    qs('#whatsContact').href = `https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent('Olá! Gostaria de falar sobre o casamento.')}`;
-
-    // Botões
     qs('#copyPix').onclick = ()=>{ navigator.clipboard.writeText(CONFIG.pixKey||'').then(()=>{ const b=qs('#copyPix'); const t=b.textContent; b.textContent='Copiado!'; setTimeout(()=>b.textContent=t, 1200) }) };
 
-    // Foto do topo
+    // HERO image
     const heroEl = document.getElementById('heroImageEl'); heroEl.setAttribute('href', CONFIG.heroImage);
 
-    // Dados
+    // Dados dos produtos
     let data = null; try{ data = await fetchSheet(); }catch(e){ console.warn('fetchSheet err', e)}
     if(!Array.isArray(data) || data.length===0){ console.warn('Planilha vazia/erro.'); data = [] }
     ITEMS = data; buildCategoryFilter(); render();
 
-    // Filtros
+    // filtros/listeners
     ['q','cat','sort','onlyAvail'].forEach(id=> qs('#'+id).addEventListener(id==='q'?'input':'change', render));
     qs('#refresh').onclick = async()=>{ const d = await fetchSheet(); if(Array.isArray(d)){ ITEMS=d; buildCategoryFilter(); render(); }}
     if(CONFIG.autoRefreshMinutes>0){ setInterval(async()=>{ const d = await fetchSheet(); if(Array.isArray(d)){ ITEMS=d; buildCategoryFilter(); render(); } }, CONFIG.autoRefreshMinutes*60000)}
