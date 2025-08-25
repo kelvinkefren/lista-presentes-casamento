@@ -36,6 +36,30 @@
       background-repeat:no-repeat;
     }
 
+    /* Intro / Boas-vindas antes dos produtos */
+    .intro{ text-align:center; }
+    .intro h2{ 
+      margin: 0 0 8px;
+      font-size: clamp(22px, 3vw, 32px);
+      font-weight: 600;
+    }
+    .intro .subtitle{
+      color: var(--muted);
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      font-size: clamp(12px, 1.4vw, 14px);
+      margin-bottom: 22px;
+    }
+    .intro .leaf{
+      width: 84px; height: auto; opacity:.9; margin: 6px auto 18px;
+    }
+    .intro p{
+      max-width: 900px;
+      margin: 0 auto;
+      color: var(--muted);
+      line-height: 1.85;
+    }
+
     /* NAV */
     .nav{position:sticky; top:0; z-index:20; background:color-mix(in oklab, var(--paper), white 30%); border-bottom:1px solid var(--edge);}
     .nav .inner{max-width:1200px; margin:0 auto; padding:14px 18px; display:flex; align-items:center; gap:20px;}
@@ -129,7 +153,7 @@
       <div class="spacer"></div>
       <nav class="menu">
         <a href="#presentes">Presentes</a>
-        <a href="#rsvp">Confirmar Presença</a>
+        <a href="#rsvp">Contato</a>
         <a href="#pix">PIX</a>
       </nav>
     </div>
@@ -176,6 +200,66 @@
   </header>
 
   <main class="wrap">
+    <!-- BOAS-VINDAS -->
+    <section id="boasvindas" class="section intro">
+      <h2>Sejam bem-vindos ao nosso site!</h2>
+      <div class="subtitle">A melhor forma de compartilhar esse momento com vocês é unindo sonhos.</div>
+
+      <!-- folhinha decorativa (opcional) -->
+      <svg class="leaf" viewBox="0 0 120 60" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path fill="#E9B27A" d="M8 40c18-18 42-26 68-22-6 6-15 12-26 15 16 2 29-3 40-13-4 15-16 25-33 28-12 2-28-1-49-8z"/>
+        <path fill="#D77A57" opacity=".8" d="M18 43c14-10 30-14 47-12-5 4-12 8-20 9 14 2 25-2 35-10-4 11-13 18-27 20-10 1-23-1-35-7z"/>
+      </svg>
+
+      <p>
+        Amigos e familiares, este ano tem sido intenso e especial: estamos nos casando,
+        preparando a chegada da nossa filha e montando nosso primeiro apartamento. Ufa!
+        Muita alegria, correria e um mundo de novidades por aqui  \o/.
+      </p>
+      <p>
+        Muita gente querida não está tão pertinho, e nos sugeriram criar este site para
+        que quem quiser e puder participe de alguma forma. Aqui dá para escolher um presente
+        da lista ou contribuir, tudo via Pix — cada gesto, grande ou pequeno, faz diferença e nos
+        ajuda a construir esse começo com mais carinho e menos aperto.
+      </p>
+      <p>
+        Se a melhor forma de estar com a gente for enviar uma mensagem, uma oração ou um
+        abraço no grande dia, já ficaremos felizes demais. Obrigado por torcerem por nós
+        e por fazerem parte desta nova fase. <br>
+        Com amor, Kelvin, Tamaiale e nossa pequena Sophie. 💚
+      </p>
+
+      <p>
+        <strong>OBS:</strong> Todos os produtos do site geram automaticamente um QR Code de Pix para o Kelvin (Nubank). 
+        Como o código é feito de forma automática, pedimos que confiram os dados antes de finalizar a transferência. 💳
+      </p>
+      <p>
+        <strong>OBS2:</strong> Teremos também um chá de bebê em breve — será um momento especial para nos reunirmos, 
+        celebrar a chegada da nossa filha e compartilhar essa fase tão feliz com vocês. 🎀👶  
+        Mais detalhes serão enviados em breve!
+      </p>
+    </section>
+
+    <!-- PRESENTES -->
+    <section id="presentes" class="section">
+      <div class="title">Lista de Presentes</div>
+      <p class="muted">Escolha um item e clique em <strong>Comprar</strong> para gerar o QR Code Pix com o valor exato do presente. ✨</p>
+      <div class="controls">
+        <input id="q" type="search" placeholder="Buscar por nome, categoria..."/>
+        <select id="cat"></select>
+        <select id="sort">
+          <option value="prioridade">Ordenar: prioridade</option>
+          <option value="preco-asc">Preço: menor → maior</option>
+          <option value="preco-desc">Preço: maior → menor</option>
+          <option value="titulo">A-Z</option>
+        </select>
+        <label style="display:inline-flex;gap:8px;align-items:center"><input id="onlyAvail" type="checkbox"/> <span class="tiny">Apenas disponíveis</span></label>
+        <button class="btn alt" id="refresh">Atualizar</button>
+      </div>
+      <div id="products" class="products"></div>
+      <div id="emptyState" class="muted" style="display:none">Nenhum item encontrado.</div>
+    </section>
+    
     <!-- PIX -->
     <section id="pix" class="section">
       <div class="grid">
@@ -199,34 +283,13 @@
       </div>
     </section>
 
-    <!-- PRESENTES -->
-    <section id="presentes" class="section">
-      <div class="title">Lista de Presentes</div>
-      <p class="muted">Escolha um item e clique em <strong>Comprar</strong> para gerar o QR Code Pix com o valor exato do presente. ✨</p>
-      <div class="controls">
-        <input id="q" type="search" placeholder="Buscar por nome, categoria..."/>
-        <select id="cat"></select>
-        <select id="sort">
-          <option value="prioridade">Ordenar: prioridade</option>
-          <option value="preco-asc">Preço: menor → maior</option>
-          <option value="preco-desc">Preço: maior → menor</option>
-          <option value="titulo">A-Z</option>
-        </select>
-        <label style="display:inline-flex;gap:8px;align-items:center"><input id="onlyAvail" type="checkbox"/> <span class="tiny">Apenas disponíveis</span></label>
-        <button class="btn alt" id="refresh">Atualizar</button>
-      </div>
-      <div id="products" class="products"></div>
-      <div id="emptyState" class="muted" style="display:none">Nenhum item encontrado.</div>
-    </section>
-
     <!-- RSVP / LOCAL -->
     <section id="rsvp" class="section">
       <div class="grid">
         <div class="card"><div class="body">
-          <div class="title">Confirmação de Presença (RSVP)</div>
-          <p class="muted">Use o botão abaixo para confirmar presença. Se preferir, fale com a gente por WhatsApp. 💬</p>
+          <div class="title">Contato</div>
+          <p class="muted">Use o botão abaixo para falar com a gente por WhatsApp. 💬</p>
           <div class="toolbar">
-            <a class="btn" id="rsvpBtn" target="_blank" rel="noopener">Abrir formulário</a>
             <a class="btn alt" id="whatsContact" target="_blank" rel="noopener">Falar no Whats</a>
           </div>
         </div></div>
@@ -271,7 +334,7 @@
     initialsLogo: "K + T",
     coupleNames: "Kelvin & Tamaiale",
     dateNumbers: "27 · 08 · 2025",
-    weddingDateISO: "2025-08-27T19:00:00-03:00",
+    weddingDateISO: "2025-08-27T12:00:00-03:00",
     venueName: "Cartório Vitória",
     venueAddress: "R. Professor Martagão Gesteira, 477 - Graça, Salvador",
     mapsLink: "https://www.google.com/maps/place/Cart%C3%B3rio+de+Registro+Civil+das+Pessoas+Naturais+do+Subdistrito+da+Vit%C3%B3ria/@-13.002347,-38.522519,17z",
