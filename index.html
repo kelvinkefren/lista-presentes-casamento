@@ -249,26 +249,6 @@
       </p>
     </section>
 
-    <!-- PRESENTES -->
-    <section id="presentes" class="section">
-      <div class="title">Lista de Presentes</div>
-      <p class="muted">Escolha um item e clique em <strong>Comprar</strong> para gerar o QR Code Pix com o valor exato do presente. ✨</p>
-      <div class="controls">
-        <input id="q" type="search" placeholder="Buscar por nome, categoria..."/>
-        <select id="cat"></select>
-        <select id="sort">
-          <option value="prioridade">Ordenar: prioridade</option>
-          <option value="preco-asc">Preço: menor → maior</option>
-          <option value="preco-desc">Preço: maior → menor</option>
-          <option value="titulo">A-Z</option>
-        </select>
-        <label style="display:inline-flex;gap:8px;align-items:center"><input id="onlyAvail" type="checkbox"/> <span class="tiny">Apenas disponíveis</span></label>
-        <button class="btn alt" id="refresh">Atualizar</button>
-      </div>
-      <div id="products" class="products"></div>
-      <div id="emptyState" class="muted" style="display:none">Nenhum item encontrado.</div>
-    </section>
-    
     <!-- PIX -->
     <section id="pix" class="section">
       <div class="grid">
@@ -291,6 +271,27 @@
         </div>
       </div>
     </section>
+    
+    <!-- PRESENTES -->
+    <section id="presentes" class="section">
+      <div class="title">Lista de Presentes</div>
+      <p class="muted">Escolha um item e clique em <strong>Comprar</strong> para gerar o QR Code Pix com o valor exato do presente. ✨</p>
+      <div class="controls">
+        <input id="q" type="search" placeholder="Buscar por nome, categoria..."/>
+        <select id="cat"></select>
+        <select id="sort">
+          <option value="prioridade">Ordenar: prioridade</option>
+          <option value="preco-asc">Preço: menor → maior</option>
+          <option value="preco-desc">Preço: maior → menor</option>
+          <option value="titulo">A-Z</option>
+        </select>
+        <label style="display:inline-flex;gap:8px;align-items:center"><input id="onlyAvail" type="checkbox"/> <span class="tiny">Apenas disponíveis</span></label>
+        <button class="btn alt" id="refresh">Atualizar</button>
+      </div>
+      <div id="products" class="products"></div>
+      <div id="emptyState" class="muted" style="display:none">Nenhum item encontrado.</div>
+    </section>
+  
 
     <!-- RSVP / LOCAL -->
     <section id="rsvp" class="section">
