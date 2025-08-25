@@ -3,127 +3,175 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Lista de Presentes — Casamento</title>
-  <meta name="description" content="Lista de presentes do casamento — confirme presença, veja itens e envie um presente com amor." />
-  <meta property="og:title" content="Lista de Presentes — Casamento" />
-  <meta property="og:description" content="Confirme presença, veja itens e envie um presente com amor." />
-  <meta property="og:type" content="website" />
+  <title>Kelvin & Tamaiale — 27/08/2025</title>
+  <meta name="description" content="Site do casamento — fotos, presentes, PIX e confirmação de presença." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Great+Vibes&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <style>
     :root{
-      --bg:#0f172a;         /* slate-900 */
-      --panel:#111827;      /* gray-900 */
-      --muted:#94a3b8;      /* slate-400 */
-      --text:#e5e7eb;       /* gray-200 */
-      --brand:#22c55e;      /* green-500 */
-      --brand-2:#38bdf8;    /* sky-400 */
-      --danger:#ef4444;     /* red-500 */
-      --warn:#f59e0b;       /* amber-500 */
-      --ok:#10b981;         /* emerald-500 */
-      --card:#0b1225;       /* darker */
-      --chip:#1f2937;       /* gray-800 */
-      --shadow: 0 10px 30px rgba(0,0,0,.35);
-      --radius: 18px;
+      --paper:#F5EEE9;            /* papel bege */
+      --paper-2:#F2E7DF;          /* variação */
+      --ink:#2a2a2a;              /* texto */
+      --muted:#6c6c6c;            /* texto fraco */
+      --accent:#3C8C6F;           /* verde musgo */
+      --accent-2:#C09D5C;         /* dourado */
+      --chip:#fff;                /* chips claros */
+      --edge:#d8cfc7;             /* borda sutil */
+      --radius:18px;
+      --shadow:0 10px 30px rgba(0,0,0,.12);
     }
     *{box-sizing:border-box}
-    html,body{margin:0;background:linear-gradient(180deg,#0b1020,#0f172a);color:var(--text);font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,"Noto Sans",sans-serif}
-    a{color:inherit}
-    .wrap{max-width:1100px;margin:0 auto;padding:24px}
-    header.hero{position:relative;border-radius:28px;padding:28px;overflow:hidden;background:
-      radial-gradient(1200px 600px at -5% -10%, rgba(56,189,248,.18), transparent 40%),
-      radial-gradient(1200px 600px at 110% 110%, rgba(34,197,94,.18), transparent 40%),
-      linear-gradient(180deg, #0d152c, #0b1225 60%)
-    ;box-shadow:var(--shadow)}
-    .hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:22px}
-    @media(max-width:900px){.hero-grid{grid-template-columns:1fr}}
-    .hero h1{font-size:clamp(28px,4vw,42px);margin:0 0 8px 0}
-    .date{display:flex;gap:10px;align-items:center;color:var(--muted)}
-    .chip{display:inline-flex;gap:8px;align-items:center;background:var(--chip);border:1px solid #1f2b46;color:#cbd5e1;border-radius:999px;padding:6px 12px;font-size:13px}
-    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:18px}
-    .card{grid-column:span 12;background:var(--card);border:1px solid #162036;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
-    .card .body{padding:18px}
-    .flex{display:flex;gap:10px;align-items:center}
-    .btn{appearance:none;border:0;background:var(--brand);color:#052e1b;font-weight:700;border-radius:12px;padding:12px 14px;cursor:pointer;transition:.2s;box-shadow:0 6px 16px rgba(34,197,94,.2)}
-    .btn:hover{transform:translateY(-1px);filter:brightness(1.02)}
-    .btn.alt{background:#0e1b34;color:#cbd5e1;border:1px solid #203055;box-shadow:none}
-    .btn.ghost{background:transparent;border:1px solid #213055;color:#cbd5e1}
-    .btn.bad{background:var(--danger);color:#2a0707;box-shadow:0 6px 16px rgba(239,68,68,.2)}
-    .btn.warn{background:var(--warn);color:#2f1e03}
-    .btn.ok{background:var(--ok);color:#032019}
-    .title{font-size:18px;font-weight:800;margin:0 0 6px 0}
+    html,body{margin:0; color:var(--ink); font-family:"Cormorant Garamond", ui-serif, Georgia, serif; background:var(--paper);}
+    /* textura de papel com manchas bem sutis */
+    body:before{content:""; position:fixed; inset:0; pointer-events:none; opacity:.30; mix-blend-mode:multiply;
+      background-image:
+        radial-gradient(1000px 600px at -10% -5%, var(--paper-2), transparent 55%),
+        radial-gradient(900px 600px at 110% 110%, var(--paper-2), transparent 55%),
+        radial-gradient(2px 2px at 20% 40%, rgba(0,0,0,.06), transparent 55%),
+        radial-gradient(2px 2px at 70% 60%, rgba(0,0,0,.05), transparent 55%),
+        radial-gradient(3px 3px at 40% 85%, rgba(0,0,0,.04), transparent 55%),
+        radial-gradient(3px 3px at 85% 25%, rgba(0,0,0,.04), transparent 55%);
+      background-repeat:no-repeat;
+    }
+
+    /* NAV */
+    .nav{position:sticky; top:0; z-index:20; background:color-mix(in oklab, var(--paper), white 30%);
+      border-bottom:1px solid var(--edge);}
+    .nav .inner{max-width:1200px; margin:0 auto; padding:14px 18px; display:flex; align-items:center; gap:20px;}
+    .brand{font-weight:600; letter-spacing:.12em;}
+    .brand small{font-family:system-ui, -apple-system, Segoe UI, Roboto, sans-serif; color:var(--muted); letter-spacing:0;}
+    .spacer{flex:1}
+    .menu{display:flex; gap:18px; align-items:center; font-family:system-ui, -apple-system, Segoe UI, Roboto, sans-serif}
+    .menu a{color:inherit; text-decoration:none; padding:8px 10px; border-radius:999px}
+    .menu a:hover{background:#fff; box-shadow:0 1px 0 rgba(0,0,0,.06);}
+
+    /* HERO PAPEL RASGADO */
+    .hero{position:relative; max-width:1200px; margin:24px auto 10px; padding:0 16px;}
+    .torn-wrap{position:relative; border-radius:0; box-shadow:var(--shadow)}
+    .torn{width:100%; height:auto; display:block}
+    .hero-overlay{position:absolute; inset:auto 8% 10% 8%; text-align:center; color:white; text-shadow:0 1px 20px rgba(0,0,0,.35)}
+    .hero-date{font-size:clamp(16px,2vw,20px); letter-spacing:.22em}
+    .hero-names{font-family:"Great Vibes", cursive; font-weight:400; font-size:clamp(42px,5.6vw,74px); margin-top:10px}
+
+    /* miolos */
+    .wrap{max-width:1100px; margin:0 auto; padding:18px}
+    .section{margin:28px 0}
+    .title{font-weight:600; font-size:28px}
     .muted{color:var(--muted)}
-    .section{margin:26px 0}
-    .toolbar{display:flex;flex-wrap:wrap;gap:10px}
-    .toolbar input,.toolbar select{background:#0d172e;border:1px solid #1f2b46;color:#cbd5e1;border-radius:12px;padding:10px 12px;outline:none}
-    .toolbar input::placeholder{color:#64748b}
-    .products{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+
+    /* Cartões e botões */
+    .grid{display:grid; grid-template-columns:repeat(12,1fr); gap:18px}
+    .card{grid-column:span 12; border:1px solid var(--edge); background:#fff; border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden}
+    .card .body{padding:18px}
+    .btn{appearance:none; border:0; background:var(--accent); color:#fff; font-weight:600; padding:10px 14px; border-radius:999px; cursor:pointer}
+    .btn.alt{background:#fff; color:var(--ink); border:1px solid var(--edge)}
+    .btn.ghost{background:transparent; color:var(--ink); border:1px dashed var(--edge)}
+    .toolbar{display:flex; flex-wrap:wrap; gap:10px}
+
+    /* produtos */
+    .controls{display:flex; flex-wrap:wrap; gap:10px; margin:10px 0 16px}
+    .controls input, .controls select{background:#fff; border:1px solid var(--edge); padding:10px 12px; border-radius:12px; outline:none}
+    .products{display:grid; grid-template-columns:repeat(3,1fr); gap:18px}
     @media(max-width:1000px){.products{grid-template-columns:repeat(2,1fr)}}
     @media(max-width:640px){.products{grid-template-columns:1fr}}
-    .product{background:linear-gradient(180deg,#0c1428,#0b1225);border:1px solid #17203a;border-radius:16px;overflow:hidden;display:flex;flex-direction:column;position:relative}
-    .product .img{aspect-ratio:4/3;background:#0a1224 center/cover no-repeat}
-    .product .content{padding:14px;display:flex;flex-direction:column;gap:8px}
-    .product .price{font-weight:900}
-    .product .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}
-    .badge{position:absolute;top:10px;left:10px;background:#0b1225;border:1px solid #1d2a48;color:#cbd5e1;border-radius:999px;padding:6px 10px;font-size:12px}
-    .status{position:absolute;inset:0;background:rgba(8,10,16,.72);display:none;align-items:center;justify-content:center;font-weight:900;letter-spacing:.5px}
-    .product.reservado .status{display:flex}
-    .product.comprado .status{display:flex;background:rgba(8,10,16,.82)}
-    .product.reservado .status span{background:var(--warn);color:#2e1602}
-    .product.comprado .status span{background:var(--ok);color:#052014}
-    .status span{padding:8px 12px;border-radius:10px}
-    .tiny{font-size:12px;color:#8da3c1}
-    .hr{border-top:1px solid #192644;margin:12px 0}
-    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-    @media(max-width:840px){.two-col{grid-template-columns:1fr}}
-    footer{opacity:.8;margin:28px 0 80px 0}
-    .copy{background:#0d1a32;border:1px dashed #2a3b64;border-radius:12px;padding:12px}
-    .tag{background:#0e1b34;border:1px solid #213055;padding:4px 8px;border-radius:999px;font-size:12px;color:#cbd5e1}
-    .pill{display:inline-flex;gap:8px;align-items:center}
-    .hidden{display:none}
+    .product{background:#fff; border:1px solid var(--edge); border-radius:16px; overflow:hidden; display:flex; flex-direction:column}
+    .product .img{aspect-ratio:4/3; background:#eee; display:grid; place-items:center}
+    .product .img img{width:100%; height:100%; object-fit:cover; display:block}
+    .product .content{padding:14px; display:flex; flex-direction:column; gap:8px}
+    .product .price{font-weight:700}
+    .product .actions{display:flex; gap:8px; flex-wrap:wrap; margin-top:auto}
+    .badge{position:absolute; top:10px; left:10px; background:#fff; border:1px solid var(--edge); color:var(--ink); padding:6px 10px; border-radius:999px; font-size:12px}
+    .tiny{font-size:12px; color:var(--muted)}
+
+    footer{opacity:.9; margin:40px 0 80px; text-align:center}
+
+    /* elementos decorativos (folhas) */
+    .decor{position:fixed; z-index:0; opacity:.7; pointer-events:none}
+    .decor.left{left:-60px; top:110px; width:220px}
+    .decor.right{right:-40px; bottom:90px; width:240px}
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
 <body>
-  <div class="wrap">
-    <header class="hero">
-      <div class="hero-grid">
-        <div>
-          <h1 id="coupleTitle">Nosso Casamento</h1>
-          <div class="date">
-            <span class="chip" title="Data do casamento"><strong id="dateHuman">27 ago 2025 • 12:00</strong></span>
-            <span class="chip" id="venueChip">Local: <span id="venueName">Cartório Vitória</span></span>
-          </div>
-          <p class="muted" style="margin:12px 0 18px 0">Faltam <strong id="countdown">—</strong> para o grande dia! 🎉
-            <br/>Veja a lista de presentes, e nos ajude nessa aventura.</p>
-          <div class="toolbar">
-            <button class="btn" id="addToCalendar">Adicionar ao calendário</button>
-            <a class="btn alt" id="mapsLink" href="#" target="_blank" rel="noopener">Como chegar</a>
-            <button class="btn ghost" id="shareSite">Compartilhar site</button>
-          </div>
-        </div>
-        <div class="card" style="min-height:100%">
+  <!-- NAV -->
+  <div class="nav">
+    <div class="inner">
+      <div class="brand">K + T <small>27 · 08 · 2025</small></div>
+      <div class="spacer"></div>
+      <nav class="menu">
+        <a href="#presentes">Presentes</a>
+        <a href="#rsvp">Confirmar Presença</a>
+        <a href="#pix">PIX</a>
+      </nav>
+    </div>
+  </div>
+
+  <!-- DECORAÇÕES (folhas em SVG, inline) -->
+  <svg class="decor left" viewBox="0 0 120 220" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <defs>
+      <linearGradient id="g1" x1="0" x2="1" y1="0" y2="1">
+        <stop offset="0" stop-color="#E9B27A"/>
+        <stop offset="1" stop-color="#D77A57"/>
+      </linearGradient>
+    </defs>
+    <g fill="url(#g1)" opacity=".7">
+      <path d="M20 10c22 36-2 60-10 92-6 26 9 46 40 64-12-32-4-52 9-72 14-22 9-52-39-84z"/>
+      <path d="M70 45c18 28-3 45-13 67-8 19 4 34 28 48-8-24-3-39 6-54 10-17 6-39-21-61z"/>
+    </g>
+  </svg>
+  <svg class="decor right" viewBox="0 0 140 240" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <g fill="#E3B98C" opacity=".75">
+      <path d="M80 15c28 30 14 60 7 86-7 27 7 50 35 76-10-34-6-56 5-78 12-24 0-55-47-84z"/>
+      <path d="M30 70c20 22 8 40 2 57-5 17 4 33 22 49-9-22-6-37 1-50 8-15 3-36-25-56z"/>
+    </g>
+  </svg>
+
+  <!-- HERO com máscara "papel rasgado" -->
+  <header class="hero" id="topo">
+    <div class="torn-wrap">
+      <!-- a máscara é um path irregular; a imagem vem do CONFIG.heroImage -->
+      <svg class="torn" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-label="Foto do casal">
+        <defs>
+          <clipPath id="tornMask" clipPathUnits="objectBoundingBox">
+            <!-- path aproximando um retângulo com bordas rasgadas -->
+            <path d="M0.03,0.20 C0.10,0.18,0.18,0.22,0.25,0.20 C0.32,0.18,0.38,0.22,0.45,0.21 C0.52,0.20,0.60,0.22,0.66,0.20 C0.72,0.18,0.78,0.22,0.86,0.21 C0.93,0.20,0.97,0.22,1.00,0.24 L1.00,0.80 C0.96,0.82,0.92,0.78,0.86,0.79 C0.79,0.80,0.74,0.76,0.67,0.78 C0.60,0.80,0.54,0.76,0.47,0.78 C0.40,0.80,0.34,0.76,0.27,0.77 C0.20,0.78,0.13,0.75,0.08,0.77 C0.04,0.79,0.02,0.78,0.00,0.76 L0.00,0.26 C0.02,0.22,0.01,0.22,0.03,0.20 z" />
+          </clipPath>
+        </defs>
+        <image id="heroImageEl" clip-path="url(#tornMask)" href="" width="1600" height="900" preserveAspectRatio="xMidYMid slice"/>
+      </svg>
+      <div class="hero-overlay">
+        <div class="hero-date">27 · 08 · 2025</div>
+        <div class="hero-names">Kelvin & Tamaiale</div>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- PIX -->
+    <section id="pix" class="section">
+      <div class="grid">
+        <div class="card">
           <div class="body">
-            <div class="title">Contribuir via Pix</div>
+            <div class="title">Contribuir via PIX</div>
             <p class="muted">Se preferir, você pode presentear com qualquer valor via Pix. 💚</p>
-            <div class="copy">
-              <div class="tiny">Chave Pix</div>
-              <div id="pixKeyText" style="word-break:break-all;margin:6px 0 8px 0;font-weight:800">configurar-em-config.js</div>
-              <div class="toolbar"><button class="btn ok" id="copyPix">Copiar chave</button><a class="btn alt" id="openPixWhats" href="#" target="_blank" rel="noopener">Enviar comprovante (WhatsApp)</a></div>
+            <div class="toolbar">
+              <span class="btn alt" id="pixKeyText">(configure a chave no código)</span>
+              <button class="btn" id="copyPix">Copiar chave</button>
+              <a class="btn ghost" id="openPixWhats" target="_blank" rel="noopener">Enviar comprovante (WhatsApp)</a>
             </div>
-            <div id="pixQrWrap" class="section hidden">
-              <div class="tiny">QR Code Pix</div>
-              <img id="pixQrImg" alt="QR Code Pix" style="width:100%;max-width:320px;border-radius:12px;border:1px solid #1d2a48" />
-            </div>
+            <div style="margin-top:14px"><img id="pixQrImg" alt="QR Code Pix" style="max-width:320px;border-radius:12px;border:1px solid var(--edge)"/></div>
           </div>
         </div>
       </div>
-    </header>
+    </section>
 
-    <section class="section">
+    <!-- PRESENTES -->
+    <section id="presentes" class="section">
       <div class="title">Lista de Presentes</div>
-      <p class="muted" style="margin-top:6px">Escolha um item abaixo. Clique em <em>Reservar</em> para nos avisar pelo WhatsApp e depois <em>Comprar</em> pelo link da loja. Atualizamos o status manualmente.
-      </p>
-      <div class="toolbar" style="margin:12px 0 16px 0">
-        <input id="q" type="search" placeholder="Buscar por nome, categoria..." />
+      <p class="muted">Escolha um item, clique em <em>Reservar</em> para nos avisar no WhatsApp e depois <em>Comprar</em> no link da loja.</p>
+      <div class="controls">
+        <input id="q" type="search" placeholder="Buscar por nome, categoria..."/>
         <select id="cat"></select>
         <select id="sort">
           <option value="prioridade">Ordenar: prioridade</option>
@@ -131,374 +179,201 @@
           <option value="preco-desc">Preço: maior → menor</option>
           <option value="titulo">A-Z</option>
         </select>
-        <label class="pill"><input id="onlyAvail" type="checkbox" /> <span class="tag">Apenas disponíveis</span></label>
-        <button class="btn ghost" id="refresh">Atualizar lista</button>
+        <label style="display:inline-flex;gap:8px;align-items:center"><input id="onlyAvail" type="checkbox"/> <span class="tiny">Apenas disponíveis</span></label>
+        <button class="btn alt" id="refresh">Atualizar</button>
       </div>
       <div id="products" class="products"></div>
-      <div id="emptyState" class="muted hidden" style="margin-top:8px">Nenhum item encontrado.</div>
+      <div id="emptyState" class="muted" style="display:none">Nenhum item encontrado.</div>
     </section>
 
-    <section class="section two-col">
-      <div class="card"><div class="body">
-        <div class="title">Detalhes do Evento</div>
-        <div class="hr"></div>
-        <div class="muted"><strong id="dateFull"></strong></div>
-        <div class="muted">Local: <strong id="venueFull">—</strong></div>
-        <div class="muted">Endereço: <strong id="address"></strong></div>
-        <div class="toolbar" style="margin-top:10px">
-          <a class="btn alt" id="venueMap2" href="#" target="_blank" rel="noopener">Abrir mapa</a>
-        </div>
-      </div></div>
-      <div class="card"><div class="body">
-        <div class="title">Confirmação de Presença (RSVP)</div>
-        <p class="muted">Use o botão abaixo para confirmar presença. Se preferir, fale com a gente por WhatsApp. 💬</p>
-        <div class="toolbar">
-          <a class="btn" id="rsvpBtn" href="#" target="_blank" rel="noopener">Abrir formulário de RSVP</a>
-          <a class="btn alt" id="whatsContact" href="#" target="_blank" rel="noopener">Falar no WhatsApp</a>
-        </div>
-      </div></div>
+    <!-- RSVP / LOCAL -->
+    <section id="rsvp" class="section">
+      <div class="grid">
+        <div class="card"><div class="body">
+          <div class="title">Confirmação de Presença (RSVP)</div>
+          <p class="muted">Use o botão abaixo para confirmar presença. Se preferir, fale com a gente por WhatsApp. 💬</p>
+          <div class="toolbar">
+            <a class="btn" id="rsvpBtn" target="_blank" rel="noopener">Abrir formulário</a>
+            <a class="btn alt" id="whatsContact" target="_blank" rel="noopener">Falar no Whats</a>
+          </div>
+        </div></div>
+        <div class="card"><div class="body">
+          <div class="title">Detalhes do Evento</div>
+          <div class="muted" id="dateFull"></div>
+          <div class="muted">Local: <strong id="venueFull">—</strong></div>
+          <div class="muted">Endereço: <strong id="address"></strong></div>
+          <div class="toolbar" style="margin-top:10px">
+            <a class="btn alt" id="venueMap2" target="_blank" rel="noopener">Abrir mapa</a>
+          </div>
+        </div></div>
+      </div>
     </section>
 
-    <footer class="muted">
-      Feito com carinho 💚 — personalize este arquivo (<span class="tiny">index.html</span>) e publique no GitHub Pages.
-    </footer>
-  </div>
+    <footer class="muted">Feito com carinho 💚 — publique no GitHub Pages (coloque <code>index.html</code>, <code>produtos.xlsx</code> e sua foto <code>hero.jpg</code> na mesma pasta).</footer>
+  </main>
 
   <script>
   // =====================
-  // CONFIGURAÇÕES GERAIS
+  // CONFIGURAÇÕES
   // =====================
   const CONFIG = {
+    initialsLogo: "K + T",
     coupleNames: "Kelvin & Tamaiale",
-    // Formato ISO com timezone de Salvador (UTC-03)
-    weddingDateISO: "2025-08-27T12:00:00-03:00",
+    dateNumbers: "27 · 08 · 2025",
+    weddingDateISO: "2025-08-27T19:00:00-03:00",
     venueName: "Cartório Vitória",
-    venueAddress: " R. Professor Martagão Gesteira, 477 - Graça, Salvador",
-    mapsLink: "https://www.google.com/maps/place/Cart%C3%B3rio+de+Registro+Civil+das+Pessoas+Naturais+do+Subdistrito+da+Vit%C3%B3ria/@-13.002347,-38.5250939,1083m/data=!3m2!1e3!4b1!4m6!3m5!1s0x716037e88b3d331:0x4b8d9a28c97501de!8m2!3d-13.002347!4d-38.522519!16s%2Fg%2F1q62lf0wk?entry=ttu&g_ep=EgoyMDI1MDgxOS4wIKXMDSoASAFQAw%3D%3D",
-    whatsappNumber: "71988183846", // ex: 5599999999999 (DDD+Número)
-    rsvpFormUrl: "https://forms.gle/", // opcional: Google Forms
-    pixKey: "71988183846", // e-mail, CPF, telefone, aleatória
-    pixQrImageUrl: "bradesco.png", // opcional: caminho para imagem do QR
-    // Fonte de dados: use apenas UMA. Recomendo a planilha do Google publicada.
-    autoRefreshMinutes: 5,
+    venueAddress: "R. Professor Martagão Gesteira, 477 - Graça, Salvador",
+    mapsLink: "https://www.google.com/maps/place/Cart%C3%B3rio+de+Registro+Civil+das+Pessoas+Naturais+do+Subdistrito+da+Vit%C3%B3ria/@-13.002347,-38.522519,17z",
+
+    // IMAGEM DO TOPO — coloque o arquivo junto do index.html (ex.: hero.jpg)
+    heroImage: "hero.jpg",
+
+    // Contato / RSVP / PIX
+    whatsappNumber: "71988183846",
+    rsvpFormUrl: "https://forms.gle/",
+    pixKey: "71988183846",
+    pixQrImageUrl: "bradesco.png",
+
+    // Planilha: escolha SÓ UMA fonte (xlsx local OU sheetUrl)
+    sheetUrl: "",
+    localExcelFile: "produtos.xlsx",
+    localCsvFile: "",
     moeda: "BRL",
-    // >>> ARQUIVOS LOCAIS (use um destes e deixe sheetUrl vazio) <<<
-    sheetUrl: "",//"https://docs.google.com/spreadsheets/d/11-eUVwz6axvkVt1io78a15XF859dx0SYHS31TUZJ4cU/gviz/tq?tqx=out:json",
-    localExcelFile: "produtos.xlsx", // ex.: "produtos.xlsx" (mesma pasta do index.html)
-    localCsvFile: ""                 // ex.: "produtos.csv" (opcional)
-  }
+    autoRefreshMinutes: 5
+  };
 
-  // Itens estáticos de exemplo (use caso não queira planilha agora)
-  const STATIC_ITEMS = [
-    { id:"1", status:"disponivel", categoria:"Cozinha", titulo:"Jogo de Panelas Antiaderentes (5 peças)", descricao:"Conjunto durável para o dia a dia.", preco:299.90, link:"https://www.magazineluiza.com.br/", imagem:"https://images.unsplash.com/photo-1543339308-43f5b16b17d6?q=80&w=1280&auto=format&fit=crop", prioridade:1 },
-    { id:"2", status:"disponivel", categoria:"Quarto", titulo:"Jogo de Cama Queen 150 fios", descricao:"Tecido macio e resistente.", preco:169.00, link:"https://www.americanas.com.br/", imagem:"https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?q=80&w=1280&auto=format&fit=crop", prioridade:2 },
-    { id:"3", status:"reservado", categoria:"Eletro", titulo:"Liquidificador 900W Inox", descricao:"Potente e silencioso.", preco:239.90, link:"https://www.amazon.com.br/", imagem:"https://images.unsplash.com/photo-1611259182765-9c012d78f05f?q=80&w=1280&auto=format&fit=crop", prioridade:3 },
-    { id:"4", status:"disponivel", categoria:"Sala", titulo:"Conjunto de Taças para Vinho (6x)", descricao:"Vidro temperado, 450 ml.", preco:129.90, link:"https://www.mercadolivre.com.br/", imagem:"https://images.unsplash.com/photo-1495860436317-9a4d2078d3f9?q=80&w=1280&auto=format&fit=crop", prioridade:4 },
-    { id:"5", status:"comprado", categoria:"Banho", titulo:"Jogo de Toalhas (4 peças)", descricao:"Algodão 450 g/m².", preco:139.00, link:"https://www.submarino.com.br/", imagem:"https://images.unsplash.com/photo-1521043723867-9b3d1dc4a3e9?q=80&w=1280&auto=format&fit=crop", prioridade:5 }
-  ];
-
-  // ================
-  // UTILITÁRIOS
-  // ================
-  const fmtBRL = v => new Intl.NumberFormat('pt-BR',{style:'currency',currency:CONFIG.moeda}).format((v===undefined||v===null||isNaN(v))?0:Number(v));
-  const DEFAULT_IMG = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='800' height='600'><rect fill='%230b1225' width='100%' height='100%'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%2364758b' font-family='sans-serif' font-size='24'>Sem imagem</text></svg>";
+  // utilitários
   const qs = s => document.querySelector(s);
   const el = (tag, attrs={}) => Object.assign(document.createElement(tag), attrs);
+  const fmtBRL = v => new Intl.NumberFormat('pt-BR',{style:'currency',currency:CONFIG.moeda}).format((v===undefined||v===null||isNaN(v))?0:Number(v));
+  const DEFAULT_IMG = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='800' height='600'><rect fill='%23eee' width='100%' height='100%'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%23999' font-family='sans-serif' font-size='24'>Sem imagem</text></svg>";
 
-  function humanDateLong(iso){
-    const d = new Date(iso);
-    return d.toLocaleString('pt-BR',{
-      weekday:'long', day:'2-digit', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit'
-    });
-  }
-  function humanDateShort(iso){
-    const d = new Date(iso);
-    return d.toLocaleDateString('pt-BR',{ day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit' });
-  }
+  function normHeader(h){return String(h||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,'').trim()}
+  function splitCSV(line){const out=[];let cur='';let q=false;for(let i=0;i<line.length;i++){const ch=line[i];if(ch==='"'){q=!q;continue}if(ch===','&&!q){out.push(cur);cur='';continue}cur+=ch}out.push(cur);return out.map(s=>s.trim())}
+  function toNumber(x){if(typeof x==='number') return x; if(!x) return 0; const s=String(x).replace(/[^0-9,.-]/g,'').replace(/\.(?=\d{3}(\D|$))/g,'').replace(',', '.'); const n=parseFloat(s); return isNaN(n)?0:n}
+  function normalizeItem(o,i){const map={};for(const k in o) map[normHeader(k)]=o[k];return {
+    id:String(map.id||i+1), status:String(map.status||'disponivel').toLowerCase().trim(),
+    categoria:String(map.categoria||'Outros').trim(), titulo:String(map.titulo||'Item').trim(),
+    descricao:String(map.descricao||'').trim(), preco:toNumber(map.preco),
+    link:String(map.link||map.loja||'').trim(), imagem:String(map.imagem||map.foto||'').trim(),
+    prioridade: parseInt(map.prioridade||(i+1),10) || (i+1)
+  }}
 
-  // Cria arquivo .ics (calendário)
-  function downloadICS(){
-    const d = new Date(CONFIG.weddingDateISO);
-    const pad = n=> String(n).padStart(2,'0');
-    const dt = `${d.getUTCFullYear()}${pad(d.getUTCMonth()+1)}${pad(d.getUTCDate())}T${pad(d.getUTCHours())}${pad(d.getUTCMinutes())}00Z`;
-    const title = `Casamento — ${CONFIG.coupleNames}`;
-    const loc = `${CONFIG.venueName} — ${CONFIG.venueAddress}`;
-    const ics = `BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//ListaPresentes//BR//PT\nBEGIN:VEVENT\nUID:${Date.now()}@listapresentes\nDTSTAMP:${dt}\nDTSTART:${dt}\nDTEND:${dt}\nSUMMARY:${title}\nLOCATION:${loc}\nDESCRIPTION:Venha celebrar conosco!\nEND:VEVENT\nEND:VCALENDAR`;
-    const blob = new Blob([ics], {type:'text/calendar'});
-    const url = URL.createObjectURL(blob);
-    const a = el('a',{href:url,download:'casamento.ics'}); document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-  }
-
-  // Compartilhar site (mobile)
-  async function shareSite(){
-    try{
-      if(navigator.share){
-        await navigator.share({title:document.title, text:`Lista de presentes — ${CONFIG.coupleNames}`, url:location.href});
-      } else { alert('Copie o link: '+location.href); }
-    }catch(e){ console.log(e) }
-  }
-
-  // Contagem regressiva
-  function startCountdown(){
-    const elC = qs('#countdown');
-    const target = new Date(CONFIG.weddingDateISO).getTime();
-    function tick(){
-      const now = Date.now();
-      const diff = Math.max(0, target - now);
-      const d = Math.floor(diff/86400000);
-      const h = Math.floor((diff%86400000)/3600000);
-      const m = Math.floor((diff%3600000)/60000);
-      elC.textContent = `${d} dias, ${h}h ${m}m`;
-    }
-    tick(); setInterval(tick, 30000);
-  }
-
-  // WhatsApp helpers
-  function waLink(text){
-    const base = `https://wa.me/${CONFIG.whatsappNumber}`;
-    return `${base}?text=${encodeURIComponent(text)}`;
-  }
-
-  // =========================
-  // CARREGAR DADOS (Planilha)
-  // =========================
   async function fetchSheet(){
-    // 1) Arquivo Excel local (.xlsx)
+    // 1) XLSX local
     if (CONFIG.localExcelFile && CONFIG.localExcelFile.trim()){
-      const buf = await fetch(CONFIG.localExcelFile).then(r=>{
-        if(!r.ok) throw new Error('Falha ao carregar Excel local: '+r.status);
-        return r.arrayBuffer();
-      });
+      const buf = await fetch(CONFIG.localExcelFile).then(r=>{if(!r.ok) throw new Error('Falha ao carregar '+CONFIG.localExcelFile); return r.arrayBuffer()});
       const wb = XLSX.read(buf, {type:'array'});
-      const ws = wb.Sheets[wb.SheetNames[0]];
+      let ws = wb.Sheets[wb.SheetNames[0]];
+      for (const n of wb.SheetNames){const rows = XLSX.utils.sheet_to_json(wb.Sheets[n], {header:1, defval:''});if(rows.length>1){ws = wb.Sheets[n];break}}
       const rows = XLSX.utils.sheet_to_json(ws, {header:1, defval:''});
-      const headers = (rows.shift()||[]).map(h => (String(h||'').toLowerCase()));
-      return rows.filter(r => r.some(v => String(v).trim().length>0)).map((cells,i)=>{
-        const o={}; headers.forEach((h,idx)=> o[h]=cells[idx]??'');
-        return normalizeItem(o,i);
-      });
+      const headers = (rows.shift()||[]).map(normHeader);
+      return rows.filter(r=>r.some(v=>String(v).trim().length>0)).map((cells,i)=>{const o={}; headers.forEach((h,idx)=>o[h]=cells[idx]??''); return normalizeItem(o,i)})
     }
-
-    // 2) Arquivo CSV local (.csv)
+    // 2) CSV local
     if (CONFIG.localCsvFile && CONFIG.localCsvFile.trim()){
-      const text = await fetch(CONFIG.localCsvFile).then(r=>{
-        if(!r.ok) throw new Error('Falha ao carregar CSV local: '+r.status);
-        return r.text();
-      });
-      const rows = text.split(/\r?\n/).filter(l=>l.trim().length>0).map(l=> splitCSV(l));
-      const headers = (rows.shift()||[]).map(h=> (h||'').toLowerCase());
-      return rows.map((cells,i)=>{
-        const o={}; headers.forEach((h,idx)=> o[h]=cells[idx]||'');
-        return normalizeItem(o,i);
-      });
+      const text = await fetch(CONFIG.localCsvFile).then(r=>{if(!r.ok) throw new Error('Falha ao carregar '+CONFIG.localCsvFile); return r.text()});
+      const rows = text.split(/\r?\n/).filter(Boolean).map(splitCSV);
+      const headers = (rows.shift()||[]).map(normHeader);
+      return rows.map((cells,i)=>{const o={}; headers.forEach((h,idx)=>o[h]=cells[idx]||''); return normalizeItem(o,i)})
     }
-
-    // 3) Planilha online (gviz/csv)
-    if(!CONFIG.sheetUrl){ return null; }
+    // 3) Google Sheets (opcional)
+    if (!CONFIG.sheetUrl) return null;
     const raw = CONFIG.sheetUrl.trim();
-    const candidates = [raw];
-    if(/^https?:\/\//.test(raw)){
-      const prox = 'https://r.jina.ai/http://'+ raw.replace(/^https?:\/\//,'');
-      candidates.push(prox);
-    } else if(/^[A-Za-z0-9-_]{20,}$/.test(raw)){
-      // Se colou apenas o ID do Google Sheets, montamos a URL GVIZ automaticamente
-      candidates.unshift(`https://docs.google.com/spreadsheets/d/${raw}/gviz/tq?tqx=out:json`);
-    }
-
-    for(const url of candidates){
+    const urls = [/^https?:/.test(raw)? raw : `https://docs.google.com/spreadsheets/d/${raw}/gviz/tq?tqx=out:json`, 'https://r.jina.ai/http://'+raw.replace(/^https?:\/\//,'')];
+    for (const url of urls){
       try{
-        const text = await fetch(url).then(r=>{ if(!r.ok) throw new Error('HTTP '+r.status); return r.text(); });
-
-        // gviz JSON
+        const text = await fetch(url).then(r=>{if(!r.ok) throw new Error('HTTP '+r.status); return r.text()});
         if(url.includes('tqx=out:json')){
-          const start = text.indexOf('{'); const end = text.lastIndexOf('}');
-          if(start === -1 || end === -1){ continue; }
-          const data = JSON.parse(text.substring(start, end+1));
-          const cols = (data.table?.cols||[]).map(c=> (c.label||c.id||'').toLowerCase());
-          const rows = data.table?.rows || [];
-          return rows.map((r,i)=>{
-            const o={}; (r.c||[]).forEach((cell,idx)=>{ o[cols[idx]||`col${idx}`] = cell? cell.v: '' });
-            return normalizeItem(o,i);
-          });
+          const start=text.indexOf('{'); const end=text.lastIndexOf('}'); if(start<0||end<0) continue;
+          const data = JSON.parse(text.slice(start,end+1));
+          const cols=(data.table?.cols||[]).map(c=>normHeader(c.label||c.id||''));
+          const rows=(data.table?.rows||[]).map(r=> (r.c||[]).map(c=>c?c.v:''));
+          return rows.map((cells,i)=>{const o={}; cols.forEach((h,idx)=>o[h]=cells[idx]||''); return normalizeItem(o,i)})
         }
-
-        // CSV
-        if(url.includes('export?format=csv') || url.endsWith('.csv')){
-          const rows = text.split(/\r?\n/).filter(Boolean).map(l=> splitCSV(l));
-          const headers = (rows.shift()||[]).map(h=> (h||'').toLowerCase());
-          return rows.map((cells,i)=>{
-            const o={}; headers.forEach((h,idx)=> o[h]=cells[idx]||'');
-            return normalizeItem(o,i);
-          });
-        }
-
-      }catch(err){
-        console.warn('Falha ao buscar', url, err);
-      }
+      }catch(e){console.warn('Falha na planilha', url, e)}
     }
-
-    return null;
+    return null
   }
 
-  function splitCSV(line){
-    const out=[]; let cur=''; let q=false;
-    for(let i=0;i<line.length;i++){
-      const ch = line[i];
-      if(ch==='"'){ q=!q; continue; }
-      if(ch===',' && !q){ out.push(cur); cur=''; continue; }
-      cur+=ch;
-    }
-    out.push(cur); return out.map(s=>s.replace(/^\s+|\s+$/g,''));
-  }
-
-  function toNumber(x){
-    if(typeof x==='number') return x;
-    if(!x) return 0;
-    // Remove R$ e separadores no formato BR
-    const s = String(x).replace(/[^0-9,.-]/g,'').replace(/\.(?=\d{3}(\D|$))/g,'').replace(',', '.');
-    const n = parseFloat(s); return isNaN(n)? 0: n;
-  }
-
-  function normalizeItem(o,i){
-    // Espera colunas: id, status, categoria, titulo, descricao, preco, link, imagem, prioridade
-    const item = {
-      id: String(o.id||i+1),
-      status: String(o.status||'disponivel').toLowerCase().trim(),
-      categoria: String(o.categoria||'Outros').trim(),
-      titulo: String(o.titulo||'Item').trim(),
-      descricao: String(o.descricao||'').trim(),
-      preco: toNumber(o.preco),
-      link: String(o.link||o.loja||'').trim(),
-      imagem: String(o.imagem||o.foto||'').trim(),
-      prioridade: parseInt(o.prioridade|| (i+1),10) || (i+1)
-    };
-    return item;
-  }
-
-  // ================
-  // RENDERIZAÇÃO
-  // ================
-  let ITEMS = [];
-
+  // RENDER
+  let ITEMS=[];
+  function buildCategoryFilter(){const cats=Array.from(new Set(ITEMS.map(i=>i.categoria))).sort(); const sel=qs('#cat'); sel.innerHTML=''; sel.appendChild(el('option',{value:'*',innerText:'Todas as categorias'})); cats.forEach(c=> sel.appendChild(el('option',{value:c, innerText:c}))) }
   function render(){
-    const term = qs('#q').value.toLowerCase().trim();
-    const cat = qs('#cat').value;
-    const only = qs('#onlyAvail').checked;
-    const sort = qs('#sort').value;
+    const term=qs('#q').value.toLowerCase().trim(); const cat=qs('#cat').value; const only=qs('#onlyAvail').checked; const sort=qs('#sort').value;
+    let arr=[...ITEMS];
+    if(term) arr = arr.filter(i=> (i.titulo+" "+i.descricao+" "+i.categoria).toLowerCase().includes(term));
+    if(cat && cat!=="*") arr = arr.filter(i=> i.categoria===cat);
+    if(only) arr = arr.filter(i=> i.status==='disponivel');
+    if(sort==='preco-asc') arr.sort((a,b)=>a.preco-b.preco);
+    else if(sort==='preco-desc') arr.sort((a,b)=>b.preco-a.preco);
+    else if(sort==='titulo') arr.sort((a,b)=> a.titulo.localeCompare(b.titulo));
+    else arr.sort((a,b)=> a.prioridade-b.prioridade);
 
-    let arr = [...ITEMS];
-    if(term){ arr = arr.filter(i=> (i.titulo+" "+i.descricao+" "+i.categoria).toLowerCase().includes(term)); }
-    if(cat && cat!=="*"){ arr = arr.filter(i=> i.categoria===cat); }
-    if(only){ arr = arr.filter(i=> i.status==='disponivel'); }
-
-    if(sort==='preco-asc'){ arr.sort((a,b)=>a.preco-b.preco); }
-    else if(sort==='preco-desc'){ arr.sort((a,b)=>b.preco-a.preco); }
-    else if(sort==='titulo'){ arr.sort((a,b)=> a.titulo.localeCompare(b.titulo)); }
-    else { arr.sort((a,b)=> a.prioridade-b.prioridade); }
-
-    const wrap = qs('#products'); wrap.innerHTML='';
-    if(arr.length===0){ qs('#emptyState').classList.remove('hidden'); return; }
-    qs('#emptyState').classList.add('hidden');
-
+    const wrap=qs('#products'); wrap.innerHTML='';
+    if(arr.length===0){qs('#emptyState').style.display='block'; return} else qs('#emptyState').style.display='none';
     for(const it of arr){
-      const card = el('div',{className:`product ${it.status}`} );
+      const card = el('div',{className:'product'});
       const img = el('div',{className:'img'});
-      const imgUrl = (it.imagem && String(it.imagem).trim().length>0) ? it.imagem : DEFAULT_IMG;
-      img.style.backgroundImage = `url('${imgUrl}')`;
-      const badge = el('div',{className:'badge', innerText: it.categoria});
-      const status = el('div',{className:'status'}); status.appendChild(el('span',{innerText: it.status.toUpperCase()}));
+      const picture = new Image(); picture.loading='lazy'; picture.referrerPolicy='no-referrer'; picture.src = (it.imagem&&it.imagem.trim())? it.imagem : DEFAULT_IMG; picture.onerror = ()=>{picture.src=DEFAULT_IMG};
+      img.appendChild(picture);
       const content = el('div',{className:'content'});
-      const title = el('div',{className:'title', innerText: it.titulo});
+      const title = el('div',{style:'font-weight:600; font-size:18px', innerText: it.titulo});
       const desc = el('div',{className:'muted', innerText: it.descricao});
-      const price = el('div',{className:'price', innerText: it.preco? fmtBRL(it.preco): '—'});
-      let host = "";
-      try { if (it.link) host = new URL(it.link, location.href).hostname.replace(/^www\./,""); } catch(_) {}
+      const price= el('div',{className:'price', innerText: it.preco? fmtBRL(it.preco): '—'});
+      let host=''; try{ if(it.link) host = new URL(it.link, location.href).hostname.replace(/^www\./,''); }catch{}
       const tiny = el('div',{className:'tiny', innerText: host});
       const actions = el('div',{className:'actions'});
-
-      const btnReserve = el('a',{className:'btn warn', target:'_blank', rel:'noopener', innerText:'Reservar (WhatsApp)'});
-      btnReserve.href = waLink(`Oi! Quero presentear com: ${it.titulo} (${it.categoria})${it.preco? ' — '+fmtBRL(it.preco): ''}. Link: ${it.link||'-'}`);
-
+      const btnReserve = el('a',{className:'btn', target:'_blank', rel:'noopener', innerText:'Reservar (WhatsApp)'});
+      btnReserve.href = `https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(`Oi! Quero presentear com: ${it.titulo} (${it.categoria})${it.preco? ' — '+fmtBRL(it.preco): ''}. Link: ${it.link||'-'}`)}`;
       const btnBuy = el('a',{className:'btn alt', target:'_blank', rel:'noopener', innerText:'Comprar na loja'});
       btnBuy.href = it.link || '#';
-
       const btnCopy = el('button',{className:'btn ghost', innerText:'Copiar nome'});
-      btnCopy.addEventListener('click',()=>{ navigator.clipboard.writeText(it.titulo).then(()=>{ btnCopy.innerText='Copiado!'; setTimeout(()=>btnCopy.innerText='Copiar nome',1200); }); });
-
-      if(it.status!=='disponivel'){
-        btnReserve.classList.add('disabled'); btnReserve.style.pointerEvents='none'; btnReserve.style.filter='grayscale(1)';
-        btnBuy.classList.add('disabled'); btnBuy.style.pointerEvents='none'; btnBuy.style.filter='grayscale(1)';
-      }
-
+      btnCopy.onclick = ()=>{navigator.clipboard.writeText(it.titulo).then(()=>{btnCopy.innerText='Copiado!'; setTimeout(()=>btnCopy.innerText='Copiar nome',1200)})};
       actions.append(btnReserve, btnBuy, btnCopy);
       content.append(title, desc, price, tiny, actions);
-      card.append(img, badge, status, content);
+      card.append(img, content);
       wrap.appendChild(card);
     }
   }
 
-  function buildCategoryFilter(){
-    const cats = Array.from(new Set(ITEMS.map(i=>i.categoria))).sort();
-    const sel = qs('#cat'); sel.innerHTML='';
-    sel.appendChild(el('option',{value:'*',innerText:'Todas as categorias'}));
-    for(const c of cats){ sel.appendChild(el('option',{value:c,innerText:c})) }
-  }
-
-  // ================
-  // INICIALIZAÇÃO
-  // ================
+  // INIT
   async function init(){
-    // Header
-    qs('#coupleTitle').textContent = `Lista de Presentes — ${CONFIG.coupleNames}`;
-    qs('#dateHuman').textContent = humanDateShort(CONFIG.weddingDateISO);
-    qs('#dateFull').textContent = humanDateLong(CONFIG.weddingDateISO);
-    qs('#venueName').textContent = CONFIG.venueName;
+    // Preenche info textual
+    document.title = `${CONFIG.coupleNames} — ${CONFIG.dateNumbers}`;
+    qs('.brand').firstChild && (qs('.brand').firstChild.textContent = CONFIG.initialsLogo);
+    qs('.hero-date').textContent = CONFIG.dateNumbers;
+    qs('.hero-names').textContent = CONFIG.coupleNames;
+    qs('#dateFull').textContent = new Date(CONFIG.weddingDateISO).toLocaleString('pt-BR',{weekday:'long', day:'2-digit', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit'});
     qs('#venueFull').textContent = CONFIG.venueName;
     qs('#address').textContent = CONFIG.venueAddress;
-    qs('#mapsLink').href = CONFIG.mapsLink; qs('#venueMap2').href = CONFIG.mapsLink;
+    qs('#venueMap2').href = CONFIG.mapsLink;
 
-    // Pix
+    // PIX
     qs('#pixKeyText').textContent = CONFIG.pixKey || '—';
-    qs('#openPixWhats').href = waLink('Enviei um presente via Pix. Segue o comprovante:');
-    if(CONFIG.pixQrImageUrl){
-      qs('#pixQrWrap').classList.remove('hidden');
-      qs('#pixQrImg').src = CONFIG.pixQrImageUrl;
-    }
+    qs('#openPixWhats').href = `https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent('Enviei um presente via Pix. Segue o comprovante:')}`;
+    if(CONFIG.pixQrImageUrl){ qs('#pixQrImg').src = CONFIG.pixQrImageUrl; }
 
-    // RSVP & WhatsApp contato
-    if(CONFIG.rsvpFormUrl){ qs('#rsvpBtn').href = CONFIG.rsvpFormUrl; } else { qs('#rsvpBtn').classList.add('hidden') }
-    qs('#whatsContact').href = waLink('Olá! Gostaria de falar sobre o casamento.');
+    // RSVP e contato
+    if(CONFIG.rsvpFormUrl) qs('#rsvpBtn').href = CONFIG.rsvpFormUrl; else qs('#rsvpBtn').style.display='none';
+    qs('#whatsContact').href = `https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent('Olá! Gostaria de falar sobre o casamento.')}`;
 
-    // Ações de topo
-    qs('#addToCalendar').addEventListener('click', downloadICS);
-    qs('#shareSite').addEventListener('click', shareSite);
-    qs('#copyPix').addEventListener('click',()=>{
-      navigator.clipboard.writeText(CONFIG.pixKey||'').then(()=>{
-        const b = qs('#copyPix'); const old = b.textContent; b.textContent='Copiado!'; setTimeout(()=>b.textContent=old, 1200);
-      });
-    });
+    // Botões
+    qs('#copyPix').onclick = ()=>{ navigator.clipboard.writeText(CONFIG.pixKey||'').then(()=>{ const b=qs('#copyPix'); const t=b.textContent; b.textContent='Copiado!'; setTimeout(()=>b.textContent=t, 1200) }) };
 
-    // Buscar dados
-    let data = null;
-    try { data = await fetchSheet(); } catch(e){ console.warn('fetchSheet error', e); }
-    if(!Array.isArray(data) || data.length===0){ data = STATIC_ITEMS; }
-    ITEMS = data;
-    buildCategoryFilter();
-    render();
+    // Foto do topo
+    const heroEl = document.getElementById('heroImageEl'); heroEl.setAttribute('href', CONFIG.heroImage);
+
+    // Dados
+    let data = null; try{ data = await fetchSheet(); }catch(e){ console.warn('fetchSheet err', e)}
+    if(!Array.isArray(data) || data.length===0){ console.warn('Planilha vazia/erro.'); data = [] }
+    ITEMS = data; buildCategoryFilter(); render();
 
     // Filtros
-    qs('#q').addEventListener('input', render);
-    qs('#cat').addEventListener('change', render);
-    qs('#sort').addEventListener('change', render);
-    qs('#onlyAvail').addEventListener('change', render);
-    qs('#refresh').addEventListener('click', async()=>{ const d = await fetchSheet(); if(d){ ITEMS=d; buildCategoryFilter(); render(); } });
-
-    // Auto-refresh periódico
-    if(CONFIG.autoRefreshMinutes>0){ setInterval(async()=>{ const d = await fetchSheet(); if(d){ ITEMS=d; buildCategoryFilter(); render(); } }, CONFIG.autoRefreshMinutes*60000); }
-
-    startCountdown();
+    ['q','cat','sort','onlyAvail'].forEach(id=> qs('#'+id).addEventListener(id==='q'?'input':'change', render));
+    qs('#refresh').onclick = async()=>{ const d = await fetchSheet(); if(Array.isArray(d)){ ITEMS=d; buildCategoryFilter(); render(); }}
+    if(CONFIG.autoRefreshMinutes>0){ setInterval(async()=>{ const d = await fetchSheet(); if(Array.isArray(d)){ ITEMS=d; buildCategoryFilter(); render(); } }, CONFIG.autoRefreshMinutes*60000)}
   }
-
   window.addEventListener('DOMContentLoaded', init);
   </script>
 </body>
